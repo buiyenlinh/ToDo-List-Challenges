@@ -1,0 +1,23 @@
+.todoItemImage {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    background-color: aquamarine;
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+.dropdownAction {
+    position: absolute;
+    top: 40px;
+    z-index: 10;
+}
+.dropdownAction li a {
+    padding: 3px 15px;
+    display: block;
+    cursor: pointer;
+}
+
+.dropdownAction li:hover a {
+    background: #ddd;
+}
