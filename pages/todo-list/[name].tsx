@@ -2,15 +2,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { FormEvent, useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { Header } from '../../components'
 import { IItemTodoList } from '../../contants/interface'
 import ROUTE_NAME from '../../router'
-import { todoListState } from '../../store/todoListState'
+import { historyUpdateTodoListState, todoListState } from '../../store/todoListState'
 import homeStyle from '../../styles/Home.module.css'
 
 function Create() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
+    const setHistoryList = useSetRecoilState(historyUpdateTodoListState);
     const router = useRouter()
     const [index, setIndex] = useState(-1);
     const [errors, setErrors] = useState({
@@ -22,6 +23,8 @@ function Create() {
         title: '',
         content: '',
         avatar: '',
+        emojiList: [],
+        totalEmojiPoint: 0,
         created_at: 0,
         updated_at: 0
     })
@@ -49,15 +52,31 @@ function Create() {
     }
 
     const createTodoListItem = () => {
+        const id = `${new Date().getTime()}`;
         setTodoList((oldTodoList) => [
             ...oldTodoList, 
             {
-                id: `${new Date().getTime()}`,
+                id: id,
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
+                emojiList: [],
+                totalEmojiPoint: 0,
                 created_at: new Date().getTime() / 1000,
                 updated_at: new Date().getTime() / 1000
+            }
+        ])
+
+        setHistoryList((oldHistoryList) => [
+            ...oldHistoryList,
+            {
+                id: `${new Date().getTime()}`,
+                todoId: id,
+                title: todoItem.title,
+                content: todoItem.content,
+                avatar: todoItem.avatar,
+                static: 'create',
+                created_at: new Date().getTime() / 1000
             }
         ])
     }
@@ -68,6 +87,19 @@ function Create() {
             updated_at: new Date().getTime()/1000
         })
         setTodoList(newList);
+
+        setHistoryList((oldHistoryList) => [
+            ...oldHistoryList,
+            {
+                id: `${new Date().getTime()}`,
+                todoId: `${router.query.id}`,
+                title: todoItem.title,
+                content: todoItem.content,
+                avatar: todoItem.avatar,
+                static: 'update',
+                created_at: new Date().getTime() / 1000
+            }
+        ])
     }
 
     const replaceItemAtIndex = (arr: IItemTodoList[], _index: number, newValue: any) => {
@@ -103,7 +135,7 @@ function Create() {
         <>
             <Header title="Create todo item" />
             <main className={'lg:w-3/6 md:w-4/6 w-100 mx-auto mt-6 p-3'}>
-                <div className="border border-inherit p-4">
+                <div className="border border-inherit p-5">
                     <div className="flex justify-between item-center">
                         <h3 className="font-bold">Create todo item</h3>
                         <Link href="/">
@@ -111,13 +143,9 @@ function Create() {
                         </Link>
                     </div>
                     <div className="pt-3">
-                        <form
-                            action=""
-                            onSubmit={handleCreateOrUpdateTodoItem}
-                            className="grid gap-4 md:grid-cols-2 sm:grid-cols-1"
-                        >
-                            <div className="inputGroup">
-                                <label>
+                        <form onSubmit={handleCreateOrUpdateTodoItem}>
+                            <div className="mt-3 mb-2">
+                                <label className='font-bold'>
                                     Title{' '}
                                     <span className="text-red-500">*</span>
                                 </label>
@@ -136,8 +164,8 @@ function Create() {
                                 )}
                             </div>
 
-                            <div className="inputGroup">
-                                <label>
+                            <div className="mt-3 mb-2">
+                                <label className='font-bold'>
                                     Content{' '}
                                     <span className="text-red-500">*</span>
                                 </label>
@@ -156,8 +184,8 @@ function Create() {
                                 )}
                             </div>
 
-                            <div className="inputGroup">
-                                <label>Avatar</label>
+                            <div className="mt-3 mb-2">
+                                <label className='font-bold'>Avatar</label>
                                 <label className="block">
                                     <span className="sr-only">
                                         Choose profile photo
@@ -186,7 +214,7 @@ function Create() {
                                 </div>
                             </div>
 
-                            <div className="text-left col-span-2">
+                            <div className="text-left col-span-2 mt-3 mb-2">
                                 {router.query.name &&
                                     <button
                                         type={'submit'}

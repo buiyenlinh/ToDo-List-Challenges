@@ -6,8 +6,8 @@ import { Header } from '../../components'
 import { convertIntToDate } from '../../contants/funcs'
 import ROUTE_NAME from '../../router'
 import { getHistoryUpdateById, todoId } from '../../store/todoListState'
-import styles from "../../styles/Home.module.css"
-
+import styles from '../../styles/Home.module.css'
+import Image from 'next/image'
 function History() {
     const router = useRouter()
     const setTodoId = useSetRecoilState(todoId)
@@ -36,20 +36,45 @@ function History() {
                         <thead>
                             <tr>
                                 <th>Time</th>
+                                <th>Title</th>
                                 <th>Content</th>
+                                <th>Avatar</th>
                                 <th>Static</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {historyList?.map((item) => {
-                                return (
-                                    <tr key={item.id}>
-                                        <td>{convertIntToDate(item.updated_at)}</td>
-                                        <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-                                        <td>{item.static}</td>
-                                    </tr>
-                                )
-                            })}
+                            {historyList?.list?.length > 0 ? (
+                                historyList.list?.map((item) => {
+                                    return (
+                                        <tr key={item.id}>
+                                            <td className="text-center">
+                                                {convertIntToDate(
+                                                    item.created_at
+                                                )}
+                                            </td>
+                                            <td>{item.title}</td>
+                                            <td>{item.content}</td>
+                                            <td className="text-center">
+                                                {item.avatar != '' && (
+                                                    <Image
+                                                        src={item.avatar}
+                                                        alt="avatar"
+                                                        height="70"
+                                                        width="70"
+                                                    />
+                                                )}
+                                            </td>
+                                            <td className="text-center">
+                                                {item.static}
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                            ) : (
+                                <tr>
+                                    <td>Empty</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

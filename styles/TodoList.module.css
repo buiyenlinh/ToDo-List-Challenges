@@ -1,6 +1,10 @@
+.todoItem:hover .emoji {
+    display: block;
+}
+
 .todoItemImage {
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     object-fit: cover;
     background-color: aquamarine;
     border-radius: 50%;
@@ -20,4 +24,45 @@
 
 .dropdownAction li:hover a {
     background: #ddd;
+}
+
+
+/* emoji */
+.emoji {
+    position: absolute;
+    bottom: -12px;
+    right: -9px;
+    display: none;
+}
+
+.emoji:hover .emojiList {
+    display: flex;
+}
+
+.emojiList {
+    position: absolute;
+    bottom: 20px;
+    right: -20px;
+    z-index: 1200;
+    box-shadow: 0px 1px 3px #ddd;
+    display: none;
+    border-radius: 5px;
+}
+
+.emojiList li {
+    transition: all ease-in-out 0.2s;
+}
+
+.emojiList li:hover {
+    transform: scale(1.4);
+}
+
+.emojiListPoint {
+    position: absolute;
+    bottom: -12px;
+    right: 20px;
+}
+
+.emojiListPoint li {
+    padding: 2px;
 }

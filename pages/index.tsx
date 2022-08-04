@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { Header, Footer, TodoList } from '../components'
+import { Header, TodoList } from '../components'
 
 const Home: NextPage = () => {
     return (
@@ -8,7 +8,6 @@ const Home: NextPage = () => {
             <main className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
                 <TodoList/>
             </main>
-            <Footer />
         </>
     )
 }

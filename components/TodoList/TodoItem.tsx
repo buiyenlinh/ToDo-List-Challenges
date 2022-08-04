@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { IItemTodoList } from '../../contants/interface'
+import { IEmojiListItem, IItemTodoList } from '../../contants/interface'
 import Image from 'next/image'
 import styles from '../../styles/TodoList.module.css'
 import Link from 'next/link'
 import ROUTE_NAME from '../../router'
-import { useRecoilState } from 'recoil'
-import { todoListState } from '../../store/todoListState'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { emojiListState, todoListState } from '../../store/todoListState'
 import { convertIntToDate } from '../../contants/funcs'
 
 interface IProps {
@@ -13,6 +13,7 @@ interface IProps {
 }
 function TodoItem(props: IProps) {
     const [todoList, setTodoList] = useRecoilState(todoListState)
+    const emojiList = useRecoilValue(emojiListState)
     const [isShowDropDownAction, setIsDropdownAction] = useState(false)
 
     const onChangeIsShowDropdownAction = () => {
@@ -20,24 +21,86 @@ function TodoItem(props: IProps) {
     }
 
     const removeItemIndex = (arr: IItemTodoList[], _index: number) => {
-        return [...arr.slice(0, _index), ...arr.slice(_index + 1)];
+        return [...arr.slice(0, _index), ...arr.slice(_index + 1)]
+    }
+
+    const replaceItemAtIndex = (
+        arr: IItemTodoList[],
+        _index: number,
+        newValue: any
+    ) => {
+        return [...arr.slice(0, _index), newValue, ...arr.slice(_index + 1)]
     }
 
     const deleteTodoListItem = () => {
-        if (confirm("Do you want to delete?")) {
-            const idx = todoList.findIndex((item) => item === props.todoItem);
-            console.log(idx);
+        if (confirm('Do you want to delete?')) {
+            const idx = todoList.findIndex((item) => item === props.todoItem)
             if (idx > -1) {
-                const newList = removeItemIndex(todoList, idx);
-                setTodoList(newList);
+                const newList: IItemTodoList[] = removeItemIndex(todoList, idx)
+                setTodoList(newList)
             }
         }
-        setIsDropdownAction(false);
+        setIsDropdownAction(false)
+    }
+
+    const handlePointEmoji = (_todoId: string, emojiId: string) => {
+        const test: IEmojiListItem[] = []
+        todoList.forEach((_item, index) => {
+            if (_item.id == _todoId) {
+                if (_item.emojiList.length > 0) {
+                    let isCheck = false
+                    _item.emojiList.forEach((_itemChild) => {
+                        if (_itemChild.emojiId == emojiId) {
+                            test.push({
+                                id: _itemChild.id,
+                                emojiId: _itemChild.emojiId,
+                                num: _itemChild.num + 1,
+                            })
+                            isCheck = true
+                        } else {
+                            test.push(_itemChild)
+                        }
+                    })
+                    if (!isCheck) {
+                        test.push({
+                            id: `${new Date().getTime()}`,
+                            emojiId: emojiId,
+                            num: 1,
+                        })
+                    }
+                } else {
+                    test.push({
+                        id: `${new Date().getTime()}`,
+                        emojiId: emojiId,
+                        num: 1,
+                    })
+                }
+                const newList = replaceItemAtIndex(todoList, index, {
+                    ..._item,
+                    emojiList: test,
+                    totalEmojiPoint: _item.totalEmojiPoint + 1,
+                })
+                setTodoList(newList)
+            }
+        })
+    }
+
+    const removeEmoji = () => {
+        todoList.forEach((_item, index) => {
+            if (_item.id === props.todoItem.id) {
+                const newList = replaceItemAtIndex(todoList, index, {
+                    ..._item,
+                    emojiList: [],
+                    totalEmojiPoint: 0
+                })
+                setTodoList(newList);
+            }
+        })
     }
 
     return (
         <div
-            className={`flex justify-between pt-1 pb-1 pl-3 pr-3 mb-2 border border-inherit`}
+            className={`flex justify-between pt-2 pb-3 pl-3 pr-3 mb-4 border border-inherit ${styles.todoItem}`}
         >
             <div className="flex justify-start">
                 <div className={styles.todoItemImage}>
@@ -55,7 +118,7 @@ function TodoItem(props: IProps) {
                     <div>{props.todoItem.content}</div>
                 </div>
             </div>
-            <div className="flex justify-end items-center relative">
+            <div className="flex justify-end relative">
                 <div className="text-xs">
                     {`last update: ${convertIntToDate(
                         props.todoItem.updated_at
@@ -72,12 +135,14 @@ function TodoItem(props: IProps) {
                 </svg>
 
                 <ul
-                    className={`bg-white border border-inherit ${styles.dropdownAction} ${
-                        isShowDropDownAction ? 'block' : 'hidden'
-                    }`}
+                    className={`bg-white border border-inherit ${
+                        styles.dropdownAction
+                    } ${isShowDropDownAction ? 'block' : 'hidden'}`}
                 >
                     <li>
-                        <Link href={`${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}>
+                        <Link
+                            href={`${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
+                        >
                             <a>Edit</a>
                         </Link>
                     </li>
@@ -85,11 +150,91 @@ function TodoItem(props: IProps) {
                         <a onClick={deleteTodoListItem}>Delete</a>
                     </li>
                     <li>
-                        <Link href={`${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}>
+                        <Link
+                            href={`${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
+                        >
                             <a>History</a>
                         </Link>
                     </li>
                 </ul>
+
+                <div className={styles.emoji}>
+                    <div className="relative">
+                        <div className="border border-inherit rounded-full p-0.5 bg-white">
+                            <svg
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="1"
+                                color="#afaeae"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                                />
+                            </svg>
+                        </div>
+
+                        <ul
+                            className={`${styles.emojiList} flex justify-between items-center bg-white border border-inherit pl-1 pr-1 rounded-sm`}
+                        >
+                            {emojiList.map((itemEmoji) => {
+                                return (
+                                    <li
+                                        key={itemEmoji.id}
+                                        className="p-2 cursor-pointer"
+                                        onClick={() =>
+                                            handlePointEmoji(
+                                                props.todoItem.id,
+                                                itemEmoji.id
+                                            )
+                                        }
+                                    >
+                                        {itemEmoji.content}
+                                    </li>
+                                )
+                            })}
+                            {props.todoItem.emojiList?.length > 0 && (
+                                <li
+                                    className="cursor-pointer"
+                                    onClick={removeEmoji}
+                                >
+                                    <svg
+                                        className="h-5 w-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth="1"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+
+                {props.todoItem.emojiList?.length > 0 && (
+                    <ul
+                        className={`${styles.emojiListPoint} flex justify-between items-center bg-white rounded-xl border border-inherit pl-2 pr-2`}
+                    >
+                        {props.todoItem.totalEmojiPoint > 0 && (
+                            <li className="text-xs">
+                                {props.todoItem.totalEmojiPoint}
+                            </li>
+                        )}
+                        {props.todoItem.emojiList.map((item, index) =>
+                            emojiList.map((emj) => {
+                                if (emj.id == item.emojiId)
+                                    return <li key={index}>{emj.content}</li>
+                            })
+                        )}
+                    </ul>
+                )}
             </div>
         </div>
     )
