@@ -34,7 +34,7 @@ function TodoItem(props: IProps) {
 
     const deleteTodoListItem = () => {
         if (confirm('Do you want to delete?')) {
-            const idx = todoList.findIndex((item) => item === props.todoItem)
+            const idx = todoList.findIndex((item: IItemTodoList) => item === props.todoItem)
             if (idx > -1) {
                 const newList: IItemTodoList[] = removeItemIndex(todoList, idx)
                 setTodoList(newList)
@@ -45,7 +45,7 @@ function TodoItem(props: IProps) {
 
     const handlePointEmoji = (_todoId: string, emojiId: string) => {
         const test: IEmojiListItem[] = []
-        todoList.forEach((_item, index) => {
+        todoList.forEach((_item: IItemTodoList, index: number) => {
             if (_item.id == _todoId) {
                 if (_item.emojiList.length > 0) {
                     let isCheck = false
@@ -86,7 +86,7 @@ function TodoItem(props: IProps) {
     }
 
     const removeEmoji = () => {
-        todoList.forEach((_item, index) => {
+        todoList.forEach((_item: IItemTodoList, index: number) => {
             if (_item.id === props.todoItem.id) {
                 const newList = replaceItemAtIndex(todoList, index, {
                     ..._item,
@@ -98,7 +98,7 @@ function TodoItem(props: IProps) {
         })
     }
 
-    return (
+    return (    
         <div
             className={`flex justify-between pt-2 pb-3 pl-3 pr-3 mb-4 border border-inherit ${styles.todoItem}`}
         >

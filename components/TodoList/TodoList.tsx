@@ -58,7 +58,7 @@ function TodoList() {
     }
 
     return (
-        <div>
+        <>
             <div className="text-right mt-5 mb-3">
                 <Link href={ROUTE_NAME.TODOLIST.CREATE}>
                     <a>New</a>
@@ -97,7 +97,7 @@ function TodoList() {
                     <div>Empty list</div>
                 )}
             </div>
-        </div>
+        </>
     )
 }
 
