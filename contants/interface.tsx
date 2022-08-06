@@ -24,3 +24,8 @@ export interface IEmojiListItem {
     emojiId: string,
     num: number
 }
+
+export interface IDataExport {
+    todoItem: IItemTodoList,
+    historyList: IHistoryUpdateTodoListItem[]
+}

@@ -13,6 +13,10 @@
     outline: none;
 }
 
+/* SELECT */
+.select:focus {
+    outline: none;
+}
 
 /* BUTTON */
 .btn {
@@ -50,4 +54,14 @@
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+}
+
+/* NOT FOUND */
+.notFound {
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

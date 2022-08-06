@@ -2,11 +2,13 @@ import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 const Header = dynamic(() => import("../components/Header"), {ssr: false})
 const TodoList = dynamic(() => import("../components/TodoList/TodoList"), {ssr: false})
+import useTrans from './hook/useTrans'
 const Home: NextPage = () => {
+    const trans = useTrans();
     return (
         <div>
-            <Header title="ToDo List Challenges" />
-            <main className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
+            <Header title={trans.todoList.TITLE} />
+            <main>
                 <TodoList/>
             </main>
         </div>

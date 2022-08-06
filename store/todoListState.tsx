@@ -2,7 +2,7 @@ import { atom, selector } from 'recoil'
 import { recoilPersist } from 'recoil-persist'
 import {
     IHistoryUpdateTodoListItem,
-    IItemTodoList,
+    IItemTodoList
 } from '../contants/interface'
 
 const initialEmoji = [
@@ -34,14 +34,6 @@ export const todoListTextFilter = atom({
     default: '',
 })
 
-export const todoListPage = atom({
-    key: 'TodoListPage',
-    default: {
-        currentPage: 1,
-        sizePage: 8,
-    },
-})
-
 export const todoId = atom({
     key: 'TodoId',
     default: '',
@@ -50,28 +42,6 @@ export const todoId = atom({
 export const emojiListState = atom({
     key: 'EmojiList',
     default: initialEmoji,
-})
-
-export const filterTodoList = selector({
-    key: 'FilterTotoList',
-    get: ({ get }) => {
-        let list = get(todoListState)
-        const textFilter = get(todoListTextFilter)
-        const page = get(todoListPage)
-        if (textFilter != '') {
-            list = list.filter((item: IItemTodoList) =>
-                item.title.toLowerCase().includes(textFilter.toLowerCase())
-            )
-        }
-        const data: IItemTodoList[] = []
-        list.map((item: IItemTodoList, index: number) => {
-            if (index < page.currentPage * page.sizePage) {
-                data.push(item)
-            }
-        })
-
-        return data
-    },
 })
 
 export const getHistoryUpdateById = selector({

@@ -1,10 +1,20 @@
+.top {
+    top: 0px;
+    z-index: 10000;
+}
+
+.bottom {
+    margin-top: 50px;
+}
+
 .todoItem:hover .emoji {
     display: block;
 }
 
 .todoItemImage {
-    width: 45px;
-    height: 45px;
+    width: 75px;
+    height: 75px;
+    min-width: 75px;
     object-fit: cover;
     background-color: aquamarine;
     border-radius: 50%;
@@ -13,13 +23,15 @@
 
 .dropdownAction {
     position: absolute;
-    top: 40px;
+    top: 25px;
+    right: 0;
     z-index: 10;
 }
 .dropdownAction li a {
     padding: 3px 15px;
     display: block;
     cursor: pointer;
+    min-width: 80px;
 }
 
 .dropdownAction li:hover a {
@@ -30,8 +42,8 @@
 /* emoji */
 .emoji {
     position: absolute;
-    bottom: -12px;
-    right: -9px;
+    bottom: 4px;
+    right: 4px;
     display: none;
 }
 
@@ -59,10 +71,62 @@
 
 .emojiListPoint {
     position: absolute;
-    bottom: -18px;
-    right: 20px;
+    bottom: -8px;
+    right: 40px;
 }
 
 .emojiListPoint li {
     padding: 2px;
+}
+
+
+/* ICON DOTSVERTICAL */
+.iconDotsVertical {
+    min-width: 1.25em;
+}
+
+.itemRight {
+    min-width: 120px;
+    margin-left: 1em;
+    width: 120px;
+}
+
+@media (max-width: 768px) { 
+    .top {
+        width: 100%;
+    }
+
+    .itemRight {
+        min-width: auto;
+        margin-left: 0;
+        width: auto;
+    }
+
+    .lastTime {
+        position: absolute;
+        bottom: 10px;
+        left: 15px;
+    }
+
+    .todoItemContent {
+        padding-bottom: 25px;
+    }
+
+    .emoji {
+        display: block;
+    }
+}
+
+@media (max-width: 550px){
+    .todoItem {
+        align-items: flex-start;
+    }
+    .itemLeft {
+        flex-direction: column;
+    }
+
+    .iconDotsVerticalWrap {
+        position: absolute;
+        top: 10px;
+    }
 }
