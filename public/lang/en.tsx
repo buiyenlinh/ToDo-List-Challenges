@@ -7,12 +7,12 @@ const EN = {
         BACK: "Back",
         EDIT: "Edit",
         DELETE: "Delete",
-        HISTORY: "History",
         AVATAR: "Avatar",
         CREATE: "Create",
         UPDATE: "Update",
         TIME: "Time",
-        STATIC: "Static"
+        STATIC: "Static",
+        PAGE_SIZE: "Page size"
     },
     todoList: {
         TITLE: 'ToDo List Challenges',
@@ -26,11 +26,13 @@ const EN = {
         LABEL_TITLE: "Title",
         LABEL_CONTENT: "Content",
         CHOOSE_IMAGE: "Choose profile photo",
-        LAST_UPDATE: "Last update"
+        LAST_UPDATE: "Last update",
+        UPDATE_SUCCESS: "Updated successful",
+        UPDATE_HISTORY: "History"
     },
     Language: {
-        VI: "Vietnamese",
-        EN: "English"
+        vi: "Vietnamese",
+        en: "English"
     }
 }
 

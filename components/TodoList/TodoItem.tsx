@@ -16,18 +16,18 @@ import {
 } from '../../store/todoListState'
 import { convertIntToDate } from '../../contants/funcs'
 import useTrans from '../../pages/hook/useTrans'
+import { useRouter } from 'next/router'
 
 interface IProps {
     todoItem: IItemTodoList
 }
 function TodoItem(props: IProps) {
     const [todoList, setTodoList] = useRecoilState(todoListState)
-    const [historyList, setHistoryList] = useRecoilState(
-        historyUpdateTodoListState
-    )
+    const [historyList, setHistoryList] = useRecoilState(historyUpdateTodoListState)
     const emojiList = useRecoilValue(emojiListState)
     const [isShowDropDownAction, setIsDropdownAction] = useState(false)
     const trans = useTrans();
+    const router = useRouter();
 
     const onChangeIsShowDropdownAction = () => {
         setIsDropdownAction(!isShowDropDownAction)
@@ -171,7 +171,7 @@ function TodoItem(props: IProps) {
                         >
                             <li>
                                 <Link
-                                    href={`${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
+                                    href={`${router.locale}${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
                                 >
                                     <a>{trans.Common.EDIT}</a>
                                 </Link>
@@ -181,9 +181,9 @@ function TodoItem(props: IProps) {
                             </li>
                             <li>
                                 <Link
-                                    href={`${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
+                                    href={`${router.locale}${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
                                 >
-                                    <a>{trans.Common.HISTORY}</a>
+                                    <a>{trans.todoList.UPDATE_HISTORY}</a>
                                 </Link>
                             </li>
                         </ul>

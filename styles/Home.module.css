@@ -14,8 +14,15 @@
 }
 
 /* SELECT */
-.select:focus {
-    outline: none;
+.select:focus,
+.select:focus-visible {
+    outline: none !important;
+}
+
+/* LANGUAGES  */
+.languages {
+    top: 10px;
+    right: 50px;
 }
 
 /* BUTTON */

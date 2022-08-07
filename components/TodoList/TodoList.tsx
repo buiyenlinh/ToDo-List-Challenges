@@ -8,26 +8,29 @@ import styles from '../../styles/TodoList.module.css'
 import TodoItem from './TodoItem'
 import ROUTE_NAME from '../../router'
 import useTrans from '../../pages/hook/useTrans'
+import { useRouter } from 'next/router'
 function TodoList() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const [textFilter, setTextFilter] = useState('')
     const inputFileImportRef = useRef(null)
     const observer = useRef<IntersectionObserver | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(8);
+    const optionPageSize = [7, 10]
+    const [pageSize, setPageSize] = useState(optionPageSize[0]);
     const [historyList, setHistoryList] = useRecoilState(historyUpdateTodoListState)
     const [dataList, setDataList] = useState<IItemTodoList[]>([])
     const trans = useTrans();
+    const router = useRouter();
+    const {locale} = router;
 
     const lastTodoElementRef = useCallback((node: any) => {
-        console.log("run here")
         if (observer.current) {
             observer.current.disconnect()
         }
 
         observer.current = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                checkSetCurrentPage();
+                setCurrentPage((currentPage) => currentPage + 1)
             }
         })
 
@@ -36,25 +39,25 @@ function TodoList() {
         }
     }, [])
 
-    const checkSetCurrentPage = () => {
-        if (todoList.length > currentPage * pageSize) {
-            setCurrentPage((currentPage) => currentPage + 1)
-        }
-    }
     const getTodoList = () => {
-        const list:IItemTodoList[] = todoList.filter((item: IItemTodoList) =>
-            item.title.toLowerCase().includes(textFilter.toLowerCase())
-        )
+        if (currentPage < Math.ceil(todoList.length / pageSize)) {
+            const list:IItemTodoList[] = todoList.filter((item: IItemTodoList) =>
+                item.title.toLowerCase().includes(textFilter.toLowerCase())
+            )
 
-        const data = [...list.splice(0, currentPage * pageSize - 1)];
-        setDataList(data);
+            if (list.length <= currentPage * pageSize) {
+                setDataList(list.reverse());
+            } else {
+                const data = [...list.splice(list.length - currentPage * pageSize, list.length - 1)];
+                setDataList(data.reverse());
+            }
+        }
     }
 
     useEffect(() => {
         getTodoList();
-    }, [currentPage, textFilter, todoList])
+    }, [currentPage, textFilter, todoList, pageSize])
 
-    
     const onChangeTextSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setCurrentPage(1);
         setTextFilter(e.target.value)
@@ -130,12 +133,11 @@ function TodoList() {
         })
         return data;
     }
-
     return (
         <>
             <div className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
                 <div className={`lg:w-4/6 md:w-5/6 w-100 mx-auto ${styles.top} fixed bg-white border border-inherit p-3`}>
-                    <Link href={ROUTE_NAME.TODOLIST.CREATE} className="mr-3 ml-3">
+                    <Link href={`${locale}${ROUTE_NAME.TODOLIST.CREATE}`} locale={locale} className="mr-3 ml-3">
                         <a className='font-bold'>{trans.Common.NEW}</a>
                     </Link>
                     <input
@@ -157,15 +159,25 @@ function TodoList() {
                 <div className={styles.bottom}>
                     <div className="flex justify-between items-center bg-green-400 p-2 pr-5 pl-5">
                         <h1 className="font-bold">{trans.todoList.TODO_TITLE}</h1>
-                        <div className="search">
-                            <input
-                                type="text"
-                                value={textFilter}
-                                onChange={onChangeTextSearch}
-                                className={homeStyle.input}
-                                placeholder={trans.todoList.SEARCH}
-                            />
+                        <div className='flex justify-start items-center'>
+                            <div className='mr-2'>{trans.Common.PAGE_SIZE}</div>
+                            {optionPageSize.length > 0 && <select className={`${homeStyle.select} mr-2 border border-inherit p-1`} onChange={val => setPageSize(val.target.value)} value={pageSize}>
+                                { optionPageSize.map((num, index) => (
+                                    <option value={num} key={index}>{num}</option>
+                                ))}
+                            </select>
+                            }
+                            <div className="search">
+                                <input
+                                    type="text"
+                                    value={textFilter}
+                                    onChange={onChangeTextSearch}
+                                    className={homeStyle.input}
+                                    placeholder={trans.todoList.SEARCH}
+                                />
+                            </div>
                         </div>
+                        
                     </div>
                     <div className="border border-inherit p-5 pt-2">
                         {dataList.length > 0 ? (

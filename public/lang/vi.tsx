@@ -7,12 +7,12 @@ const VI = {
         BACK: "Trở lại",
         EDIT: "Sửa",
         DELETE: "Xóa",
-        HISTORY: "Lịch sử",
         AVATAR: "Ảnh đại diện",
         CREATE: "Tạo",
         UPDATE: "Cập nhật",
         TIME: "Thời gian",
-        STATIC: "Trạng thái"
+        STATIC: "Trạng thái",
+        PAGE_SIZE: "Kích thước trang"
     },
     todoList: {
         TITLE: 'Thử thách danh sách todo',
@@ -26,11 +26,13 @@ const VI = {
         LABEL_TITLE: "Tiêu đề",
         LABEL_CONTENT: "Nội dung",
         CHOOSE_IMAGE: "Chọn tệp hình ảnh",
-        LAST_UPDATE: "Cập nhật lần cuối"
+        LAST_UPDATE: "Cập nhật lần cuối",
+        UPDATE_SUCCESS: "Cập nhật thành công",
+        UPDATE_HISTORY: "Lịch sử",
     },
     Language: {
-        VI: "Việt Nam",
-        EN: "Anh"
+        vi: "Việt Nam",
+        en: "Anh"
     }
 }
 

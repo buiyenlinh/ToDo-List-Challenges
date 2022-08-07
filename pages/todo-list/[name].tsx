@@ -8,7 +8,6 @@ import {
     IHistoryUpdateTodoListItem,
     IItemTodoList,
 } from '../../contants/interface'
-import ROUTE_NAME from '../../router'
 import {
     historyUpdateTodoListState,
     todoListState,
@@ -19,7 +18,8 @@ import useTrans from '../hook/useTrans'
 function CreateUpdate() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const setHistoryList = useSetRecoilState(historyUpdateTodoListState)
-    const router = useRouter()
+    const router = useRouter();
+    const {locale} = router;
     const [index, setIndex] = useState(-1)
     const [errors, setErrors] = useState({
         title: '',
@@ -35,7 +35,7 @@ function CreateUpdate() {
         created_at: 0,
         updated_at: 0,
     })
-
+    
     const trans = useTrans();
 
     const handleCreateOrUpdateTodoItem = (e: FormEvent) => {
@@ -55,10 +55,10 @@ function CreateUpdate() {
         if (errTitle === '' && errContent === '') {
             if (router.query.name == 'update') {
                 updateTodoListItem(todoItem)
-                alert('Updated successful')
+                alert(trans.todoList.UPDATE_SUCCESS)
             } else {
                 createTodoListItem()
-                router.push(ROUTE_NAME.HOME)
+                router.push("/", `/${locale}` , { locale: locale})
             }
         }
     }
@@ -87,7 +87,7 @@ function CreateUpdate() {
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
-                static: 'create',
+                static: trans.Common.CREATE,
                 created_at: new Date().getTime() / 1000,
             },
         ])
@@ -108,7 +108,7 @@ function CreateUpdate() {
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
-                static: 'update',
+                static: trans.Common.UPDATE,
                 created_at: new Date().getTime() / 1000,
             },
         ])
@@ -161,7 +161,7 @@ function CreateUpdate() {
                 <div className="border border-inherit">
                     <div className="flex justify-between item-center bg-green-400 p-5">
                         <h3 className="font-bold">{trans.todoList.CREATE_TITLE}</h3>
-                        <Link href={ROUTE_NAME.HOME}>
+                        <Link href={`/${locale}`} locale={locale}>
                             <a className="font-bold flex justify-end items-center">
                                 {trans.Common.BACK}
                                 <svg
@@ -294,11 +294,11 @@ export const getStaticProps = async (context: any) => {
     return res;
 }
 
-export const getStaticPaths = async () => {
+export const getStaticPaths = async ({ locale }) => {
     return {
         paths: [
-            { params: { name: 'create' } },
-            { params: { name: 'update' } }
+            { params: { name: 'create' }, locale },
+            { params: { name: 'update' }, locale }
         ],
         fallback: 'blocking',
     }
