@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import useTrans from '../hooks/useTrans'
-import { langList } from '../store/indexState'
+import { langList } from '../store/index-state'
 import styles from '../styles/Home.module.css'
 interface IProps {
     title: string

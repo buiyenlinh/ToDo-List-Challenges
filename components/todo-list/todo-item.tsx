@@ -13,11 +13,11 @@ import {
     emojiListState,
     historyUpdateTodoListState,
     todoListState,
-} from '../../store/todoListState'
+} from '../../store/todo-list-state'
 import { convertIntToDate } from '../../contants/funcs'
 import useTrans from '../../hooks/useTrans'
 import { useRouter } from 'next/router'
-
+import Skeleton from 'react-loading-skeleton';
 interface IProps {
     todoItem: IItemTodoList
 }
@@ -132,25 +132,25 @@ function TodoItem(props: IProps) {
         >
             <div className={`flex justify-start ${styles.itemLeft}`}>
                 <div className={styles.todoItemImage}>
-                    {props.todoItem.avatar != '' && (
+                    {props.todoItem.avatar != '' ? (
                         <Image
                             src={props.todoItem.avatar}
                             alt={trans.Common.AVATAR}
                             height="100"
                             width="100"
                         />
-                    )}
+                    ) : <Skeleton circle={true} height={50} width={50} />}
                 </div>
                 <div className={`${styles.todoItemContent} text-justify `}>
-                    <b>{props.todoItem.title}</b>
-                    <div>{props.todoItem.content}</div>
+                    <b>{props.todoItem.title || <Skeleton /> }</b>
+                    <div>{props.todoItem.content || <Skeleton />}</div>
                 </div>
             </div>
             <div className={`flex justify-end ${styles.itemRight}`}>
                 <div className={`text-xs ${styles.lastTime}`}>
                     {`${trans.todoList.LAST_UPDATE}: ${convertIntToDate(
                         props.todoItem.updated_at
-                    )}`}
+                    )}` || <Skeleton />}
                 </div>
 
                 <div className={styles.iconDotsVerticalWrap}>
@@ -173,17 +173,17 @@ function TodoItem(props: IProps) {
                                 <Link
                                     href={`${router.locale}${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
                                 >
-                                    <a>{trans.Common.EDIT}</a>
+                                    <a>{trans.Common.EDIT || <Skeleton />}</a>
                                 </Link>
                             </li>
                             <li>
-                                <a onClick={deleteTodoListItem}>{trans.Common.DELETE}</a>
+                                <a onClick={deleteTodoListItem}>{trans.Common.DELETE || <Skeleton />}</a>
                             </li>
                             <li>
                                 <Link
                                     href={`${router.locale}${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
                                 >
-                                    <a>{trans.todoList.UPDATE_HISTORY}</a>
+                                    <a>{trans.todoList.UPDATE_HISTORY || <Skeleton />}</a>
                                 </Link>
                             </li>
                         </ul>

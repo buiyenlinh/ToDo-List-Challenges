@@ -1,5 +1,5 @@
-import Header from "./Header";
-import TodoList from "./TodoList/TodoList";
+import Header from "./comp-header";
+import TodoList from "./todo-list/todo-list";
 export {
     Header,
     TodoList
