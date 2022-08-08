@@ -3,14 +3,14 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import useTrans from '../hooks/useTrans'
-import { langList } from '../store/index-state'
+import { langListState } from '../store/index-state'
 import styles from '../styles/Home.module.css'
 interface IProps {
     title: string
 }
 function Header(props: IProps) {
     const trans = useTrans()
-    const languageList = useRecoilValue(langList)
+    const languageList = useRecoilValue(langListState)
     const router = useRouter()
     const changeLang = (lang: string) => {
         router.push('/', `/`, { locale: lang })

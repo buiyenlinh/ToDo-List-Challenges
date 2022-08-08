@@ -4,15 +4,16 @@ import React, { useEffect } from 'react'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import { Header } from '../../components'
 import { convertIntToDate } from '../../contants/funcs'
-import { getHistoryUpdateById, todoId } from '../../store/todo-list-state'
+import { historyListState, todoIdState } from '../../store/todo-list-state'
 import styles from '../../styles/Home.module.css'
 import Image from 'next/image'
 import useTrans from '../../hooks/useTrans'
+import { IHistoryUpdateTodoListItem } from '../../contants/interface'
 function History() {
     const router = useRouter()
     const { locale } = router;
-    const setTodoId = useSetRecoilState(todoId)
-    const historyList = useRecoilValue(getHistoryUpdateById)
+    const setTodoId = useSetRecoilState(todoIdState)
+    const history_list = useRecoilValue(historyListState)
     const trans = useTrans();
     useEffect(() => {
         const id = router.query.id
@@ -59,8 +60,8 @@ function History() {
                             </tr>
                         </thead>
                         <tbody>
-                            {historyList?.list?.length > 0 ? (
-                                historyList.list?.map((item) => {
+                            {history_list?.list?.length > 0 ? (
+                                history_list.list?.map((item: IHistoryUpdateTodoListItem) => {
                                     return (
                                         <tr key={item.id}>
                                             <td className="text-center">

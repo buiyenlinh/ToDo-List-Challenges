@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-export const langList = atom({
-    key: "LangList",
+export const langListState = atom({
+    key: "LangListState",
     default: ['vi', 'en'],
 })

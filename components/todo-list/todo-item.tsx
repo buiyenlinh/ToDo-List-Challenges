@@ -11,7 +11,7 @@ import ROUTE_NAME from '../../router'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
     emojiListState,
-    historyUpdateTodoListState,
+    historyListState,
     todoListState,
 } from '../../store/todo-list-state'
 import { convertIntToDate } from '../../contants/funcs'
@@ -23,7 +23,7 @@ interface IProps {
 }
 function TodoItem(props: IProps) {
     const [todoList, setTodoList] = useRecoilState(todoListState)
-    const [historyList, setHistoryList] = useRecoilState(historyUpdateTodoListState)
+    const [historyList, setHistoryList] = useRecoilState(historyListState)
     const emojiList = useRecoilValue(emojiListState)
     const [isShowDropDownAction, setIsDropdownAction] = useState(false)
     const trans = useTrans();

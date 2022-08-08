@@ -23,18 +23,18 @@ export const todoListState = atom({
     effects_UNSTABLE: [persistAtom]
 })
 
-export const historyUpdateTodoListState = atom({
+export const historyListState = atom({
     key: 'HistoryTodoList',
     default: [],
     effects_UNSTABLE: [persistAtom]
 })
 
-export const todoListTextFilter = atom({
-    key: 'TodoListTextFilter',
+export const textFilterState = atom({
+    key: 'TextFilterState',
     default: '',
 })
 
-export const todoId = atom({
+export const todoIdState = atom({
     key: 'TodoId',
     default: '',
 })
@@ -44,12 +44,12 @@ export const emojiListState = atom({
     default: initialEmoji,
 })
 
-export const getHistoryUpdateById = selector({
-    key: 'GetHistoryUpdateById',
+export const historyOfTodoState = selector({
+    key: 'HistoryOfTodoState',
     get: ({ get }) => {
-        const historyList = get(historyUpdateTodoListState)
+        const historyList = get(historyListState)
         const todoList = get(todoListState)
-        const id = get(todoId)
+        const id = get(todoIdState)
         const list: IHistoryUpdateTodoListItem[] = []
         historyList.map((item: IHistoryUpdateTodoListItem) => {
             if (item.todoId === id) {

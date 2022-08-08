@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { IDataExport, IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
-import { historyUpdateTodoListState, todoListState, } from '../../store/todo-list-state'
+import { historyListState, todoListState, } from '../../store/todo-list-state'
 import homeStyle from '../../styles/Home.module.css'
 import styles from '../../styles/TodoList.module.css'
 import TodoItem from './todo-item'
@@ -17,7 +17,7 @@ function TodoList() {
     const [currentPage, setCurrentPage] = useState(1)
     const optionPageSize = [7, 10]
     const [pageSize, setPageSize] = useState(optionPageSize[0]);
-    const [historyList, setHistoryList] = useRecoilState(historyUpdateTodoListState)
+    const [historyList, setHistoryList] = useRecoilState(historyListState)
     const [dataList, setDataList] = useState<IItemTodoList[]>([])
     const trans = useTrans();
     const router = useRouter();

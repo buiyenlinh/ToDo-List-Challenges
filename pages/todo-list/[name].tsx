@@ -9,7 +9,7 @@ import {
     IItemTodoList,
 } from '../../contants/interface'
 import {
-    historyUpdateTodoListState,
+    historyListState,
     todoListState,
 } from '../../store/todo-list-state'
 import homeStyle from '../../styles/Home.module.css'
@@ -17,7 +17,7 @@ import useTrans from '../../hooks/useTrans'
 
 function CreateUpdate() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
-    const setHistoryList = useSetRecoilState(historyUpdateTodoListState)
+    const setHistoryList = useSetRecoilState(historyListState)
     const router = useRouter();
     const {locale} = router;
     const [index, setIndex] = useState(-1)
