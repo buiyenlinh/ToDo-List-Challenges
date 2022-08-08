@@ -7,7 +7,7 @@ import { convertIntToDate } from '../../contants/funcs'
 import { getHistoryUpdateById, todoId } from '../../store/todoListState'
 import styles from '../../styles/Home.module.css'
 import Image from 'next/image'
-import useTrans from '../hook/useTrans'
+import useTrans from '../../hooks/useTrans'
 function History() {
     const router = useRouter()
     const { locale } = router;
@@ -25,7 +25,7 @@ function History() {
             <main className="lg:w-4/6 md:w-5/6 w-100 mx-auto p-3">
                 <div className="flex justify-between item-center bg-green-400 p-2 pr-5 pl-5 mt-6">
                     <h1 className="font-bold">History</h1>
-                    <Link href={`/${locale}`} locale={locale}>
+                    <Link href="/" locale={locale}>
                         <a className="font-bold flex justify-end items-center">
                             {trans.Common.BACK}
                             <svg

@@ -21,8 +21,15 @@
 
 /* LANGUAGES  */
 .languages {
-    top: 10px;
+    top: 5px;
     right: 50px;
+    z-index: 10001;
+}
+
+@media (max-width: 767px) { 
+    .languages {
+        right: 15px;
+    }
 }
 
 /* BUTTON */

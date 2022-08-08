@@ -15,7 +15,7 @@ import {
     todoListState,
 } from '../../store/todoListState'
 import { convertIntToDate } from '../../contants/funcs'
-import useTrans from '../../pages/hook/useTrans'
+import useTrans from '../../hooks/useTrans'
 import { useRouter } from 'next/router'
 
 interface IProps {

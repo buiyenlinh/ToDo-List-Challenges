@@ -7,12 +7,12 @@ import homeStyle from '../../styles/Home.module.css'
 import styles from '../../styles/TodoList.module.css'
 import TodoItem from './TodoItem'
 import ROUTE_NAME from '../../router'
-import useTrans from '../../pages/hook/useTrans'
+import useTrans from '../../hooks/useTrans'
 import { useRouter } from 'next/router'
 function TodoList() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const [textFilter, setTextFilter] = useState('')
-    const inputFileImportRef = useRef(null)
+    const inputFileImportRef = useRef<null | HTMLInputElement>(null)
     const observer = useRef<IntersectionObserver | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const optionPageSize = [7, 10]
@@ -56,6 +56,7 @@ function TodoList() {
 
     useEffect(() => {
         getTodoList();
+        //  eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, textFilter, todoList, pageSize])
 
     const onChangeTextSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +138,7 @@ function TodoList() {
         <>
             <div className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
                 <div className={`lg:w-4/6 md:w-5/6 w-100 mx-auto ${styles.top} fixed bg-white border border-inherit p-3`}>
-                    <Link href={`${locale}${ROUTE_NAME.TODOLIST.CREATE}`} locale={locale} className="mr-3 ml-3">
+                    <Link href={`${ROUTE_NAME.TODOLIST.CREATE}`} locale={locale} className="mr-3 ml-3">
                         <a className='font-bold'>{trans.Common.NEW}</a>
                     </Link>
                     <input
@@ -148,7 +149,7 @@ function TodoList() {
                     />
                     <button
                         className="mr-5 ml-5 font-bold"
-                        onClick={() => inputFileImportRef.current.click()}
+                        onClick={() => inputFileImportRef?.current?.click()}
                     >
                         {trans.Common.IMPORT}
                     </button>
@@ -161,7 +162,12 @@ function TodoList() {
                         <h1 className="font-bold">{trans.todoList.TODO_TITLE}</h1>
                         <div className='flex justify-start items-center'>
                             <div className='mr-2'>{trans.Common.PAGE_SIZE}</div>
-                            {optionPageSize.length > 0 && <select className={`${homeStyle.select} mr-2 border border-inherit p-1`} onChange={val => setPageSize(val.target.value)} value={pageSize}>
+                            {optionPageSize.length > 0 && 
+                            <select
+                                className={`${homeStyle.select} mr-2 border border-inherit p-1`}
+                                onChange={val => setPageSize(parseInt(val.target.value))}
+                                value={pageSize}
+                            >
                                 { optionPageSize.map((num, index) => (
                                     <option value={num} key={index}>{num}</option>
                                 ))}
@@ -206,4 +212,4 @@ function TodoList() {
     )
 }
 
-export default TodoList
+export default TodoList;

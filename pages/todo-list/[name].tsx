@@ -13,7 +13,7 @@ import {
     todoListState,
 } from '../../store/todoListState'
 import homeStyle from '../../styles/Home.module.css'
-import useTrans from '../hook/useTrans'
+import useTrans from '../../hooks/useTrans'
 
 function CreateUpdate() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
@@ -161,7 +161,7 @@ function CreateUpdate() {
                 <div className="border border-inherit">
                     <div className="flex justify-between item-center bg-green-400 p-5">
                         <h3 className="font-bold">{trans.todoList.CREATE_TITLE}</h3>
-                        <Link href={`/${locale}`} locale={locale}>
+                        <Link href="/" locale={locale}>
                             <a className="font-bold flex justify-end items-center">
                                 {trans.Common.BACK}
                                 <svg
@@ -294,12 +294,12 @@ export const getStaticProps = async (context: any) => {
     return res;
 }
 
-export const getStaticPaths = async ({ locale }) => {
+export const getStaticPaths = async ({ locale }: { locale: any}) => {
     return {
         paths: [
             { params: { name: 'create' }, locale },
             { params: { name: 'update' }, locale }
         ],
-        fallback: 'blocking',
+        fallback: true,
     }
 }

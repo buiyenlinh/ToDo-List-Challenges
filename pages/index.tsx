@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 const Header = dynamic(() => import("../components/Header"), {ssr: false})
 const TodoList = dynamic(() => import("../components/TodoList/TodoList"), {ssr: false})
-import useTrans from './hook/useTrans'
+import useTrans from '../hooks/useTrans'
 const Home: NextPage = () => {
     const trans = useTrans();
     return (

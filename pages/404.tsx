@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import styles from '../styles/Home.module.css'
-import useTrans from './hook/useTrans'
+import useTrans from '../hooks/useTrans'
 function NotFound() {
     const trans = useTrans()
     const router = useRouter()

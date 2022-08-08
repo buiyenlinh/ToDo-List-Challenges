@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
-import useTrans from '../pages/hook/useTrans'
+import useTrans from '../hooks/useTrans'
 import { langList } from '../store/indexState'
 import styles from '../styles/Home.module.css'
 interface IProps {
@@ -13,8 +13,9 @@ function Header(props: IProps) {
     const languageList = useRecoilValue(langList)
     const router = useRouter()
     const changeLang = (lang: string) => {
-        router.push('/', `/${lang}`, { locale: lang })
+        router.push('/', `/`, { locale: lang })
     }
+
     return (
         <>
             <Head>
@@ -24,13 +25,13 @@ function Header(props: IProps) {
             </Head>
             <div className={`${styles.languages} fixed`}>
                 {languageList.length > 0 &&
-                    languageList.map((locale) => (
+                    languageList.map((locale: string) => (
                         <button
                             className="p-2 border hover:text-white hover:bg-black bg-white"
                             key={locale}
                             onClick={() => changeLang(locale)}
                         >
-                            {trans.Language[locale]}
+                            {locale}
                         </button>
                     ))}
             </div>
