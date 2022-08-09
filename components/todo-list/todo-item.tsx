@@ -5,7 +5,6 @@ import {
     IItemTodoList,
 } from '../../contants/interface'
 import Image from 'next/image'
-import styles from '../../styles/TodoList.module.css'
 import Link from 'next/link'
 import ROUTE_NAME from '../../router'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -128,10 +127,10 @@ function TodoItem(props: IProps) {
 
     return (
         <div
-            className={`flex justify-between items-center relative pt-2 pb-3 pl-3 pr-3 mb-4 border border-inherit ${styles.todoItem}`}
+            className={`group flex justify-between relative p-3 pb-7 mb-4 border border-inherit md:items-center sm:items-start md:pb-3 sm:pb-7`}
         >
-            <div className={`flex justify-start ${styles.itemLeft}`}>
-                <div className={styles.todoItemImage}>
+            <div className="flex justify-start sm:flex-row flex-col">
+                <div className="w-16 h-16 min-w-fit object-cover rounded-full mr-2 bg-green-400">
                     {props.todoItem.avatar != '' ? (
                         <Image
                             src={props.todoItem.avatar}
@@ -141,22 +140,22 @@ function TodoItem(props: IProps) {
                         />
                     ) : <Skeleton circle={true} height={50} width={50} />}
                 </div>
-                <div className={`${styles.todoItemContent} text-justify `}>
+                <div className="text-justify">
                     <b>{props.todoItem.title || <Skeleton /> }</b>
                     <div>{props.todoItem.content || <Skeleton />}</div>
                 </div>
             </div>
-            <div className={`flex justify-end ${styles.itemRight}`}>
-                <div className={`text-xs ${styles.lastTime}`}>
+            <div className="flex justify-end md:ml-4 md:w-28 md:min-w-[22%] ml-0 w-auto min-w-fit">
+                <div className="text-xs absolute bottom-1 left-3.5 md:static">
                     {`${trans.todoList.LAST_UPDATE}: ${convertIntToDate(
                         props.todoItem.updated_at
                     )}` || <Skeleton />}
                 </div>
 
-                <div className={styles.iconDotsVerticalWrap}>
+                <div className="sm:static absolute top-2">
                     <div className="relative">
                         <svg
-                            className={`h-5 w-5 cursor-pointer ${styles.iconDotsVertical}`}
+                            className="h-5 w-5 cursor-pointer min-w-[10px]"
                             viewBox="0 0 20 20"
                             fill="currentColor"
                             onClick={onChangeIsShowDropdownAction}
@@ -165,34 +164,32 @@ function TodoItem(props: IProps) {
                         </svg>
 
                         <ul
-                            className={`bg-white border border-inherit ${
-                                styles.dropdownAction
-                            } ${isShowDropDownAction ? 'block' : 'hidden'}`}
+                            className={`bg-white border border-inherit absolute right-0 top-6 z-10 ${isShowDropDownAction ? 'block' : 'hidden'}`}
                         >
                             <li>
                                 <Link
                                     href={`${router.locale}${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
                                 >
-                                    <a>{trans.Common.EDIT || <Skeleton />}</a>
+                                    <a className='cursor-pointer block min-w-[65px] p-2'>{trans.Common.EDIT || <Skeleton />}</a>
                                 </Link>
                             </li>
                             <li>
-                                <a onClick={deleteTodoListItem}>{trans.Common.DELETE || <Skeleton />}</a>
+                                <a className='cursor-pointer block min-w-[65px] p-2' onClick={deleteTodoListItem}>{trans.Common.DELETE || <Skeleton />}</a>
                             </li>
                             <li>
                                 <Link
                                     href={`${router.locale}${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
                                 >
-                                    <a>{trans.todoList.UPDATE_HISTORY || <Skeleton />}</a>
+                                    <a className='cursor-pointer block min-w-[65px] p-2'>{trans.todoList.UPDATE_HISTORY || <Skeleton />}</a>
                                 </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div className={styles.emoji}>
+            <div className="group-hover:block hidden absolute bottom-1 right-1">
                 <div className="relative">
-                    <div className="border border-inherit rounded-full p-0.5 bg-white">
+                    <div className="peer border border-inherit rounded-full p-0.5 bg-white">
                         <svg
                             className="h-4 w-4"
                             fill="none"
@@ -209,13 +206,13 @@ function TodoItem(props: IProps) {
                     </div>
 
                     <ul
-                        className={`${styles.emojiList} flex justify-between items-center bg-white border border-inherit pl-1 pr-1 rounded-sm`}
+                        className="peer-hover:flex hover:flex hidden flex justify-between items-center bg-white border border-inherit pl-1 pr-1 rounded-sm absolute bottom-5 right-0"
                     >
                         {emojiList.map((itemEmoji) => {
                             return (
                                 <li
                                     key={itemEmoji.id}
-                                    className="p-2 cursor-pointer"
+                                    className="p-2 cursor-pointer ease-in-out duration-300 hover:scale-150"
                                     onClick={() =>
                                         handlePointEmoji(
                                             props.todoItem.id,
@@ -252,7 +249,7 @@ function TodoItem(props: IProps) {
 
             {props.todoItem.emojiList?.length > 0 && (
                 <ul
-                    className={`${styles.emojiListPoint} flex justify-between items-center bg-white rounded-xl border border-inherit pl-2 pr-2`}
+                    className={`absolute right-8 -bottom-2 flex justify-between items-center bg-white rounded-xl border border-inherit pl-2 pr-2`}
                 >
                     {props.todoItem.totalEmojiPoint > 0 && (
                         <li className="text-xs">

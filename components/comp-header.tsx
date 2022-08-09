@@ -4,7 +4,6 @@ import React from 'react'
 import { useRecoilValue } from 'recoil'
 import useTrans from '../hooks/useTrans'
 import { langListState } from '../store/index-state'
-import styles from '../styles/Home.module.css'
 interface IProps {
     title: string
 }
@@ -23,7 +22,7 @@ function Header(props: IProps) {
                 <meta name="description" content={trans.todoList.TITLE} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={`${styles.languages} fixed`}>
+            <div className="right-3.5 top-1 md:right-12 z-20 fixed">
                 {languageList.length > 0 &&
                     languageList.map((locale: string) => (
                         <button

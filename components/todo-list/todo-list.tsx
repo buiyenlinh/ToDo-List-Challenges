@@ -3,8 +3,6 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 're
 import { useRecoilState } from 'recoil'
 import { IDataExport, IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
 import { historyListState, todoListState, } from '../../store/todo-list-state'
-import homeStyle from '../../styles/Home.module.css'
-import styles from '../../styles/TodoList.module.css'
 import TodoItem from './todo-item'
 import ROUTE_NAME from '../../router'
 import useTrans from '../../hooks/useTrans'
@@ -137,7 +135,7 @@ function TodoList() {
     return (
         <>
             <div className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
-                <div className={`lg:w-4/6 md:w-5/6 w-100 mx-auto ${styles.top} fixed bg-white border border-inherit p-3`}>
+                <div className="lg:w-4/6 md:w-5/6 w-full mx-auto fixed bg-white border border-inherit p-3 top-0 z-10">
                     <Link href={`${ROUTE_NAME.TODOLIST.CREATE}`} locale={locale} className="mr-3 ml-3">
                         <a className='font-bold'>{trans.Common.NEW}</a>
                     </Link>
@@ -157,14 +155,14 @@ function TodoList() {
                         {trans.Common.EXPORT}
                     </button>
                 </div>
-                <div className={styles.bottom}>
+                <div className="mt-12">
                     <div className="flex justify-between items-center bg-green-400 p-2 pr-5 pl-5">
                         <h1 className="font-bold">{trans.todoList.TODO_TITLE}</h1>
                         <div className='flex justify-start items-center'>
                             <div className='mr-2'>{trans.Common.PAGE_SIZE}</div>
                             {optionPageSize.length > 0 && 
                             <select
-                                className={`${homeStyle.select} mr-2 border border-inherit p-1`}
+                                className="focus-visible:outline-0 mr-2 border border-inherit p-1"
                                 onChange={val => setPageSize(parseInt(val.target.value))}
                                 value={pageSize}
                             >
@@ -178,7 +176,7 @@ function TodoList() {
                                     type="text"
                                     value={textFilter}
                                     onChange={onChangeTextSearch}
-                                    className={homeStyle.input}
+                                    className="border border-inherit rounded-sm w-full outline-none py-1 px-3"
                                     placeholder={trans.todoList.SEARCH}
                                 />
                             </div>

@@ -5,7 +5,6 @@ import { useSetRecoilState, useRecoilValue } from 'recoil'
 import { Header } from '../../components'
 import { convertIntToDate } from '../../contants/funcs'
 import { historyListState, todoIdState } from '../../store/todo-list-state'
-import styles from '../../styles/Home.module.css'
 import Image from 'next/image'
 import useTrans from '../../hooks/useTrans'
 import { IHistoryUpdateTodoListItem } from '../../contants/interface'
@@ -49,14 +48,14 @@ function History() {
                     </Link>
                 </div>
                 <div>
-                    <table className={styles.table}>
+                    <table className="w-full">
                         <thead>
                             <tr>
-                                <th>{trans.Common.TIME}</th>
-                                <th>{trans.todoList.LABEL_TITLE}</th>
-                                <th>{trans.todoList.LABEL_CONTENT}</th>
-                                <th>{trans.Common.AVATAR}</th>
-                                <th>{trans.Common.STATIC}</th>
+                                <th className="border border-inherit p-2">{trans.Common.TIME}</th>
+                                <th className="border border-inherit p-2">{trans.todoList.LABEL_TITLE}</th>
+                                <th className="border border-inherit p-2">{trans.todoList.LABEL_CONTENT}</th>
+                                <th className="border border-inherit p-2">{trans.Common.AVATAR}</th>
+                                <th className="border border-inherit p-2">{trans.Common.STATIC}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,14 +63,14 @@ function History() {
                                 history_list.list?.map((item: IHistoryUpdateTodoListItem) => {
                                     return (
                                         <tr key={item.id}>
-                                            <td className="text-center">
+                                            <td className="text-center border border-inherit p-2">
                                                 {convertIntToDate(
                                                     item.created_at
                                                 )}
                                             </td>
-                                            <td>{item.title}</td>
-                                            <td>{item.content}</td>
-                                            <td className="text-center">
+                                            <td className="border border-inherit p-2">{item.title}</td>
+                                            <td className="border border-inherit p-2">{item.content}</td>
+                                            <td className="text-center border border-inherit p-2">
                                                 {item.avatar != '' && (
                                                     <Image
                                                         src={item.avatar}
@@ -81,7 +80,7 @@ function History() {
                                                     />
                                                 )}
                                             </td>
-                                            <td className="text-center">
+                                            <td className="text-center border border-inherit p-2">
                                                 {item.static}
                                             </td>
                                         </tr>
@@ -89,7 +88,7 @@ function History() {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="text-center">{trans.todoList.EMPTY_LIST}</td>
+                                    <td colSpan={5} className="text-center border border-inherit p-2">{trans.todoList.EMPTY_LIST}</td>
                                 </tr>
                             )}
                         </tbody>

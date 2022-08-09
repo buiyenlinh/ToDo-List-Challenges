@@ -12,7 +12,6 @@ import {
     historyListState,
     todoListState,
 } from '../../store/todo-list-state'
-import homeStyle from '../../styles/Home.module.css'
 import useTrans from '../../hooks/useTrans'
 
 function CreateUpdate() {
@@ -157,7 +156,7 @@ function CreateUpdate() {
     return (
         <>
             <Header title={trans.todoList.CREATE_TITLE} />
-            <main className={'lg:w-3/6 md:w-4/6 w-100 mx-auto mt-6 p-3'}>
+            <main className={'lg:w-3/6 md:w-4/6 w-100 mx-auto mt-9 p-3'}>
                 <div className="border border-inherit">
                     <div className="flex justify-between item-center bg-green-400 p-5">
                         <h3 className="font-bold">{trans.todoList.CREATE_TITLE}</h3>
@@ -192,7 +191,7 @@ function CreateUpdate() {
                                 </label>
                                 <input
                                     type="text"
-                                    className={homeStyle.input}
+                                    className="border border-inherit rounded-sm w-full outline-none py-1 px-3"
                                     value={todoItem.title}
                                     onChange={(val) =>
                                         setTodoItem((todoItem) => ({
@@ -220,7 +219,7 @@ function CreateUpdate() {
                                             content: val.target.value,
                                         }))
                                     }}
-                                    className={`${homeStyle.input} resize-y`}
+                                    className="border border-inherit rounded-sm w-full outline-none py-1 px-3 resize-y"
                                     rows={3}
                                     value={todoItem.content}
                                 ></textarea>
