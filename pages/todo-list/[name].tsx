@@ -172,7 +172,7 @@ function CreateUpdate() {
         <>
             <Header title={trans.todoList.CREATE_TITLE} />
             <main className={'lg:w-3/6 md:w-4/6 w-100 mx-auto mt-9 p-3'}>
-                { todoItem.id && router.query.id ?
+                { (todoItem.id && router.query.id) || (router.query.name == "create") ?
                     <div className="border border-inherit">
                         <div className="flex justify-between item-center bg-green-400 p-5">
                             <h3 className="font-bold">{trans.todoList.CREATE_TITLE}</h3>
