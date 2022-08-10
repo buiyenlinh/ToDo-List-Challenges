@@ -70,3 +70,66 @@ export const historyOfTodoState = selector({
         }
     },
 })
+
+export const currentPageState = atom({
+    key: "CurrentPageState",
+    default: 1
+})
+
+export const pageSizeState = atom({
+    key: "PageSizeState",
+    default: 10
+})
+
+export const OptionPageSizeState = atom({
+    key: "OptionPageSizeState",
+    default: [10, 25, 50, 100]
+})
+
+export const totalPageState = selector({
+    key: "totalPageState",
+    get: ({get}) => {
+        const textFilter = get(textFilterState);
+        const todoList = get(todoListState);
+        const pageSize = get(pageSizeState);
+        let totalPage = 1;
+        if (textFilter) {
+            const list:IItemTodoList[] = todoList.filter((item: IItemTodoList) =>
+                item.title.toLowerCase().includes(textFilter.toLowerCase())
+            )
+            totalPage = Math.ceil(list.length / pageSize);
+        } else {
+            totalPage = Math.ceil(todoList.length / pageSize);
+        }
+        return totalPage;
+    }
+})
+
+export const todoListFilterState = selector({
+    key: "TodoListFilterState",
+    get: ({get}) => {
+        const currentPage = get(currentPageState);
+        const todoList = get(todoListState);
+        const pageSize = get(pageSizeState);
+        const textFilter = get(textFilterState);
+
+        let list:IItemTodoList[] = [...todoList];
+        if (textFilter) {
+            list = todoList.filter((item: IItemTodoList) =>
+                item.title.toLowerCase().includes(textFilter.toLowerCase())
+            )
+        }
+        let data: IItemTodoList[] = [];
+        const listLength = list.length;
+        if (pageSize >= listLength) {
+            data = list;
+        } else {
+            if (currentPage * pageSize <= listLength) {
+                data = [...list.slice(listLength - currentPage * pageSize, listLength - (currentPage - 1) * pageSize)];
+            } else {
+                data = [...list.slice(0, listLength - (currentPage - 1) * pageSize )];
+            } 
+        }
+        return data.reverse();
+    }
+})
