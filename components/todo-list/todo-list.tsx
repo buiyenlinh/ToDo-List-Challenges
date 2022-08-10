@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { IDataExport, IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
 import { currentPageState, historyListState, OptionPageSizeState, pageSizeState, stateFilterState, statesListState, textFilterState, todoListFilterState, todoListState, totalPageState, } from '../../store/todo-list-state'
 import TodoItem from './todo-item'
@@ -14,7 +14,7 @@ function TodoList() {
     const todoFilterList = useRecoilValue(todoListFilterState);
     const [textFilter, setTextFilter] = useRecoilState(textFilterState)
     const totalPage = useRecoilValue(totalPageState);
-    const setCurrentPage = useSetRecoilState(currentPageState)
+    const [currentPage, setCurrentPage] = useRecoilState(currentPageState)
     const inputFileImportRef = useRef<null | HTMLInputElement>(null)
     const optionPageSize = useRecoilValue(OptionPageSizeState);
     const [pageSize, setPageSize] = useRecoilState(pageSizeState);
@@ -115,7 +115,7 @@ function TodoList() {
         setTimeout(() => {
             setIsLoading(false)
         }, 200)
-    }, [todoFilterList])
+    }, [currentPage, stateFilter, textFilter, pageSize])
 
     return (
         <div className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
