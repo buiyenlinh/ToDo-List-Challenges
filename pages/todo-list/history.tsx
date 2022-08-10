@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
 import { Header } from '../../components'
 import { convertIntToDate } from '../../contants/funcs'
-import { historyOfTodoState, todoIdState, todoListState } from '../../store/todo-list-state'
+import { historyOfTodoState, statesListState, todoIdState, todoListState } from '../../store/todo-list-state'
 import Image from 'next/image'
 import useTrans from '../../hooks/useTrans'
 import { IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
@@ -16,6 +16,7 @@ function History() {
     const setTodoId = useSetRecoilState(todoIdState)
     const todoList = useRecoilValue(todoListState);
     const historyList = useRecoilValue(historyOfTodoState)
+    const statesList = useRecoilValue(statesListState)
     const trans = useTrans();
     useEffect(() => {
         const id = router.query.id
@@ -29,6 +30,11 @@ function History() {
         }
         //  eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id])
+
+    const getItemState = (todoState: string) => {
+        const itemState = statesList.find(item => item.id == todoState);
+        return itemState?.state;
+    }
 
     return (
         <>
@@ -67,6 +73,7 @@ function History() {
                                     <th className="border border-inherit p-2">{trans.Common.TIME}</th>
                                     <th className="border border-inherit p-2">{trans.todoList.LABEL_TITLE}</th>
                                     <th className="border border-inherit p-2">{trans.todoList.LABEL_CONTENT}</th>
+                                    <th className="border border-inherit p-2">StateTodo</th>
                                     <th className="border border-inherit p-2">{trans.Common.AVATAR}</th>
                                     <th className="border border-inherit p-2">{trans.Common.STATIC}</th>
                                 </tr>
@@ -83,6 +90,7 @@ function History() {
                                                 </td>
                                                 <td className="border border-inherit p-2">{item.title}</td>
                                                 <td className="border border-inherit p-2">{item.content}</td>
+                                                <td className="text-center border border-inherit p-2">{getItemState(item.todoState)}</td>
                                                 <td className="text-center border border-inherit p-2">
                                                     {item.avatar != '' && (
                                                         <Image

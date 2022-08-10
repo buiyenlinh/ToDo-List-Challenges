@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { FormEvent, useEffect, useState } from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { Header } from '../../components'
 import {
     IHistoryUpdateTodoListItem,
@@ -10,6 +10,7 @@ import {
 } from '../../contants/interface'
 import {
     historyListState,
+    statesListState,
     todoListState,
 } from '../../store/todo-list-state'
 import useTrans from '../../hooks/useTrans'
@@ -17,6 +18,7 @@ import useTrans from '../../hooks/useTrans'
 function CreateUpdate() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const setHistoryList = useSetRecoilState(historyListState)
+    const statesList = useRecoilValue(statesListState);
     const router = useRouter();
     const {locale} = router;
     const [index, setIndex] = useState(-1)
@@ -31,6 +33,7 @@ function CreateUpdate() {
         avatar: '',
         emojiList: [],
         totalEmojiPoint: 0,
+        state: '',
         created_at: 0,
         updated_at: 0,
     })
@@ -54,11 +57,10 @@ function CreateUpdate() {
         if (errTitle === '' && errContent === '') {
             if (router.query.name == 'update') {
                 updateTodoListItem(todoItem)
-                alert(trans.todoList.UPDATE_SUCCESS)
             } else {
                 createTodoListItem()
-                router.push("/", `/${locale}` , { locale: locale})
             }
+            router.push("/", `/${locale}` , { locale: locale})
         }
     }
 
@@ -73,6 +75,7 @@ function CreateUpdate() {
                 avatar: todoItem.avatar,
                 emojiList: [],
                 totalEmojiPoint: 0,
+                state: statesList[0].id,
                 created_at: new Date().getTime() / 1000,
                 updated_at: new Date().getTime() / 1000,
             },
@@ -87,6 +90,7 @@ function CreateUpdate() {
                 content: todoItem.content,
                 avatar: todoItem.avatar,
                 static: trans.Common.CREATE,
+                todoState: statesList[0].id,
                 created_at: new Date().getTime() / 1000,
             },
         ])
@@ -107,6 +111,7 @@ function CreateUpdate() {
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
+                todoState: todoItem.state,
                 static: trans.Common.UPDATE,
                 created_at: new Date().getTime() / 1000,
             },
@@ -230,6 +235,24 @@ function CreateUpdate() {
                                 )}
                             </div>
 
+                            {
+                                router.query.id &&
+                                <div className="mt-3 mb-2">
+                                    <label className="font-bold">{trans.Common.STATIC}</label>
+                                    {statesList.length > 0 && 
+                                    <select
+                                        className="focus-visible:outline-0 mr-2 mt-1 border border-inherit p-1 pb-2 w-full"
+                                        onChange={(val) =>setTodoItem((todoItem) => ({...todoItem, state: val.target.value}))}
+                                        value={todoItem.state}
+                                    >
+                                        { statesList.map((_state) => (
+                                            <option value={_state.id} key={_state.id}>{_state.state}</option>
+                                        ))}
+                                    </select>
+                                    }
+                                </div>
+                            }
+
                             <div className="mt-3 mb-2">
                                 <label className="font-bold">{trans.Common.AVATAR}</label>
                                 <label className="block">
@@ -272,7 +295,6 @@ function CreateUpdate() {
                         </form>
                     </div>
                 </div>
-                
             </main>
         </>
     )

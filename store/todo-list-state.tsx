@@ -23,6 +23,28 @@ export const todoListState = atom({
     effects_UNSTABLE: [persistAtom]
 })
 
+export const statesListState = atom({
+    key: "StatesListState",
+    default: [
+        {
+            id: "1",
+            state: "create",
+        },
+        {
+            id: "2",
+            state: " pending",
+        },
+        {
+            id: "3",
+            state: " in progress",
+        },
+        {
+            id: "4",
+            state: "done",
+        }
+    ]
+})
+
 export const historyListState = atom({
     key: 'HistoryTodoList',
     default: [],
@@ -32,6 +54,11 @@ export const historyListState = atom({
 export const textFilterState = atom({
     key: 'TextFilterState',
     default: '',
+})
+
+export const stateFilterState = atom({
+    key: "StateFilterState",
+    default: ""
 })
 
 export const todoIdState = atom({
@@ -49,21 +76,11 @@ export const historyOfTodoState = selector({
     get: ({ get }) => {
         const historyList = get(historyListState)
         const todoList = get(todoListState)
-        const id = get(todoIdState)
-        const list: IHistoryUpdateTodoListItem[] = []
-        historyList.map((item: IHistoryUpdateTodoListItem) => {
-            if (item.todoId === id) {
-                list.push(item)
-            }
-        })
-
-        let todo = null
-        todoList.map((item: IItemTodoList) => {
-            if (item.id == id) {
-                todo = item
-            }
-        })
-
+        const id = get(todoIdState);
+        const list: IHistoryUpdateTodoListItem[] = historyList.filter(
+            (item: IHistoryUpdateTodoListItem) => item.todoId == id
+        );
+        const todo = todoList.find((item: IItemTodoList) => item.id == id);
         return {
             list: list,
             todo: todo,
@@ -112,13 +129,19 @@ export const todoListFilterState = selector({
         const todoList = get(todoListState);
         const pageSize = get(pageSizeState);
         const textFilter = get(textFilterState);
+        const stateFilter = get(stateFilterState)
 
         let list:IItemTodoList[] = [...todoList];
         if (textFilter) {
-            list = todoList.filter((item: IItemTodoList) =>
+            list = list.filter((item: IItemTodoList) =>
                 item.title.toLowerCase().includes(textFilter.toLowerCase())
             )
         }
+
+        if (stateFilter != '') {
+            list = list.filter((item: IItemTodoList) => stateFilter == item.state)
+        }
+
         let data: IItemTodoList[] = [];
         const listLength = list.length;
         if (pageSize >= listLength) {

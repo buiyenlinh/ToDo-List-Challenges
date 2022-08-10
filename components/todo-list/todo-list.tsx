@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { IDataExport, IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
-import { currentPageState, historyListState, OptionPageSizeState, pageSizeState, textFilterState, todoListFilterState, todoListState, totalPageState, } from '../../store/todo-list-state'
+import { currentPageState, historyListState, OptionPageSizeState, pageSizeState, stateFilterState, statesListState, textFilterState, todoListFilterState, todoListState, totalPageState, } from '../../store/todo-list-state'
 import TodoItem from './todo-item'
 import ROUTE_NAME from '../../router'
 import useTrans from '../../hooks/useTrans'
@@ -19,6 +19,8 @@ function TodoList() {
     const optionPageSize = useRecoilValue(OptionPageSizeState);
     const [pageSize, setPageSize] = useRecoilState(pageSizeState);
     const [historyList, setHistoryList] = useRecoilState(historyListState)
+    const statesList = useRecoilValue(statesListState);
+    const [stateFilter, setStateFilter] = useRecoilState(stateFilterState);
     const trans = useTrans();
     const router = useRouter();
     const {locale} = router;
@@ -117,8 +119,6 @@ function TodoList() {
 
     return (
         <div className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
-            { !isLoading ? 
-            <>
             <div className="lg:w-4/6 md:w-5/6 w-full mx-auto fixed bg-white border border-inherit p-3 top-0 z-10">
                 <Link href={`${ROUTE_NAME.TODOLIST.CREATE}`} locale={locale} className="mr-3 ml-3">
                     <a className='font-bold'>{trans.Common.NEW}</a>
@@ -164,18 +164,38 @@ function TodoList() {
                                 placeholder={trans.todoList.SEARCH}
                             />
                         </div>
+                        <div className="ml-2">
+                            {statesList.length > 0 && 
+                                <select
+                                    className="focus-visible:outline-0 mr-2 border border-inherit p-1 pb-1.5"
+                                    onChange={val => setStateFilter(val.target.value)}
+                                    value={stateFilter}
+                                >
+                                    <option value="">---</option>
+                                    { statesList.map((_state) => (
+                                        <option value={_state.id} key={_state.id}>{_state.state}</option>
+                                    ))}
+                                </select>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div className="border border-inherit p-5 pt-2">
-                    {todoFilterList.length > 0 ? (
-                        todoFilterList.map((todoItem: IItemTodoList, index) => (
-                            <div key={index}>
-                                <TodoItem todoItem={todoItem} />
-                            </div>
-                        ))
-                    ) : (
-                        <div>{trans.todoList.EMPTY_LIST}</div>
-                    )}
+                    { !isLoading ? 
+                        <>
+                        {todoFilterList.length > 0 ? (
+                            todoFilterList.map((todoItem: IItemTodoList, index) => (
+                                <div key={index}>
+                                    <TodoItem todoItem={todoItem} />
+                                </div>
+                            ))
+                        ) : (
+                            <div>{trans.todoList.EMPTY_LIST}</div>
+                        )}
+                        </>
+                    : <div>
+                        <Skeleton count={3} />
+                    </div>}
                 </div>
             </div>
 
@@ -184,10 +204,6 @@ function TodoList() {
                     {createPagination()}
                 </div>
             }
-            </>
-            : <div className='mt-12'>
-                <Skeleton count={3} />
-            </div>}
         </div>
     )
 }

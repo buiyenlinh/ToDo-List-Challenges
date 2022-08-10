@@ -5,8 +5,9 @@ export interface IItemTodoList {
     content: string,
     emojiList: IEmojiListItem[],
     totalEmojiPoint: number,
+    state: string,
     created_at: number,
-    updated_at: number
+    updated_at: number,
 }
 
 export interface IHistoryUpdateTodoListItem {
@@ -16,6 +17,7 @@ export interface IHistoryUpdateTodoListItem {
     title: string,
     content: string,
     static: string,
+    todoState: string,
     created_at: number,
 }
 

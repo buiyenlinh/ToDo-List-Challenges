@@ -11,6 +11,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import {
     emojiListState,
     historyListState,
+    statesListState,
     todoListState,
 } from '../../store/todo-list-state'
 import { convertIntToDate } from '../../contants/funcs'
@@ -24,6 +25,7 @@ interface IProps {
 function TodoItem(props: IProps) {
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const [historyList, setHistoryList] = useRecoilState(historyListState)
+    const statesList = useRecoilValue(statesListState)
     const emojiList = useRecoilValue(emojiListState)
     const [isShowDropDownAction, setIsDropdownAction] = useState(false)
     const trans = useTrans();
@@ -55,15 +57,9 @@ function TodoItem(props: IProps) {
                 setTodoList(newList)
 
                 // delete history
-                const newHistoryList: IHistoryUpdateTodoListItem[] = []
+                let newHistoryList: IHistoryUpdateTodoListItem[] = []
                 if (historyList.length > 0) {
-                    historyList.forEach(
-                        (hisItem: IHistoryUpdateTodoListItem) => {
-                            if (hisItem.todoId != props.todoItem.id) {
-                                newHistoryList.push(hisItem)
-                            }
-                        }
-                    )
+                    newHistoryList = historyList.filter((hisItem: IHistoryUpdateTodoListItem) => hisItem.todoId != props.todoItem.id)
                 }
                 setHistoryList(newHistoryList)
             }
@@ -126,13 +122,18 @@ function TodoItem(props: IProps) {
         })
     }
 
+    const getItemState = () => {
+        const itemState = statesList.find(item => item.id == props.todoItem.state);
+        return itemState?.state;
+    }
+
     return (
         <>
         {props.todoItem.id ? 
             <div
                 className={`group flex justify-between relative p-3 pb-7 mb-4 border border-inherit md:items-center sm:items-start md:pb-3 sm:pb-7`}
             >
-            
+                <div className='absolute -top-1 -left-4 bg-green-500 border border-black py-0.5 px-1 text-white z-10 text-xs'>{getItemState()}</div>
                 <div className="flex justify-start sm:flex-row flex-col">
                     <div className="w-16 h-16 min-w-[64px] object-cover rounded-full mr-2 bg-green-400">
                         {props.todoItem.avatar != '' &&
