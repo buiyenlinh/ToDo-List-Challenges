@@ -120,7 +120,6 @@ export const totalPageState = selector({
             list = list.filter((item: IItemTodoList) =>
                 item.title.toLowerCase().includes(textFilter.toLowerCase())
             )
-            totalPage = Math.ceil(list.length / pageSize);
         }
         if (statusFilter != '') {
             list = list.filter((item: IItemTodoList) => statusFilter == item.status)
