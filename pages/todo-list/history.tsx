@@ -6,24 +6,23 @@ import { Header } from '../../components'
 import { convertIntToDate } from '../../contants/funcs'
 import { historyOfTodoState, statesListState, todoIdState, todoListState } from '../../store/todo-list-state'
 import Image from 'next/image'
-import useTrans from '../../hooks/useTrans'
 import { IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useTranslation } from 'react-i18next'
 function History() {
     const router = useRouter()
-    const { locale } = router;
     const setTodoId = useSetRecoilState(todoIdState)
     const todoList = useRecoilValue(todoListState);
     const historyList = useRecoilValue(historyOfTodoState)
     const statesList = useRecoilValue(statesListState)
-    const trans = useTrans();
+    const { t, i18n } = useTranslation();
     useEffect(() => {
         const id = router.query.id
         if (id != undefined) {
             const val = todoList.find((item: IItemTodoList) => item.id == id);
             if (val === undefined) {
-                router.push("/404", "/404", {locale: locale})
+                router.push("/404")
             } else {
                 setTodoId(`${id}`)
             }
@@ -32,21 +31,22 @@ function History() {
     }, [router.query.id])
 
     const getItemState = (todoState: string) => {
-        const itemState = statesList.find(item => item.id == todoState);
-        return itemState?.state;
+        const itemState:any = statesList.find(item => item.id == todoState);
+        if (i18n.language)
+            return itemState[i18n.language];
     }
 
     return (
         <>
-            <Header title="History of todo item" />
+            <Header title={t("todo_list.history_title")} />
             <main className="lg:w-4/6 md:w-5/6 w-100 mx-auto p-3">
                 { historyList?.list?.length > 0 && router.query.id != undefined ?
                 <>
-                    <div className="flex justify-between item-center bg-green-400 p-2 pr-5 pl-5 mt-6">
-                        <h1 className="font-bold">{trans.todoList.UPDATE_HISTORY}</h1>
-                        <Link href="/" locale={locale}>
+                    <div className="flex justify-between item-center bg-green-400 p-2 pr-5 pl-5 mt-10">
+                        <h1 className="font-bold">{t("todo_list.update_history")}</h1>
+                        <Link href="/">
                             <a className="font-bold flex justify-end items-center">
-                                {trans.Common.BACK}
+                                {t("common.back")}
                                 <svg
                                     className="h-5 w-5"
                                     viewBox="0 0 20 20"
@@ -70,12 +70,12 @@ function History() {
                         <table className="w-full">
                             <thead>
                                 <tr>
-                                    <th className="border border-inherit p-2">{trans.Common.TIME}</th>
-                                    <th className="border border-inherit p-2">{trans.todoList.LABEL_TITLE}</th>
-                                    <th className="border border-inherit p-2">{trans.todoList.LABEL_CONTENT}</th>
-                                    <th className="border border-inherit p-2">StateTodo</th>
-                                    <th className="border border-inherit p-2">{trans.Common.AVATAR}</th>
-                                    <th className="border border-inherit p-2">{trans.Common.STATIC}</th>
+                                    <th className="border border-inherit p-2">{t("common.time")}</th>
+                                    <th className="border border-inherit p-2">{t("todo_list.label_title")}</th>
+                                    <th className="border border-inherit p-2">{t("todo_list.label_content")}</th>
+                                    <th className="border border-inherit p-2">{t("common.status")}</th>
+                                    <th className="border border-inherit p-2">{t("common.avatar")}</th>
+                                    <th className="border border-inherit p-2">{t("common.status")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,26 +90,26 @@ function History() {
                                                 </td>
                                                 <td className="border border-inherit p-2">{item.title}</td>
                                                 <td className="border border-inherit p-2">{item.content}</td>
-                                                <td className="text-center border border-inherit p-2">{getItemState(item.todoState)}</td>
+                                                <td className="text-center border border-inherit p-2">{getItemState(item.todoStatus)}</td>
                                                 <td className="text-center border border-inherit p-2">
                                                     {item.avatar != '' && (
                                                         <Image
                                                             src={item.avatar}
-                                                            alt={trans.Common.AVATAR}
+                                                            alt={t("common.avatar")}
                                                             height="70"
                                                             width="70"
                                                         />
                                                     )}
                                                 </td>
                                                 <td className="text-center border border-inherit p-2">
-                                                    {item.static}
+                                                    {item.status}
                                                 </td>
                                             </tr>
                                         )
                                     })
                                 ) : (
                                     <tr>
-                                        <td colSpan={5} className="text-center border border-inherit p-2">{trans.todoList.EMPTY_LIST}</td>
+                                        <td colSpan={5} className="text-center border border-inherit p-2">{t("todo_list.empty_list")}</td>
                                     </tr>
                                 )}
                             </tbody>

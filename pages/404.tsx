@@ -1,17 +1,15 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React from 'react'
-import useTrans from '../hooks/useTrans'
+import { useTranslation } from 'react-i18next';
 function NotFound() {
-    const trans = useTrans()
-    const router = useRouter()
+    const { t } = useTranslation();
     return (
         <div className="h-screen text-center flex flex-col items-center justify-center">
             <h1 className="font-bold text-2xl">404</h1>
-            <p>{trans.Common.NOT_FOUND_TEXT}</p>
-            <Link href="/" locale={router.locale}>
+            <p>{t("common.not_found_text")}</p>
+            <Link href="/">
                 <a className={'border border-sky-500 pl-4 pr-4 p-2 mt-4'}>
-                    {trans.todoList.BACK_TO_LIST}
+                    {t("todo_list.back_to_list")}
                 </a>
             </Link>
         </div>

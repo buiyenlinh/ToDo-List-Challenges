@@ -15,10 +15,9 @@ import {
     todoListState,
 } from '../../store/todo-list-state'
 import { convertIntToDate } from '../../contants/funcs'
-import useTrans from '../../hooks/useTrans'
-import { useRouter } from 'next/router'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useTranslation } from 'react-i18next'
 interface IProps {
     todoItem: IItemTodoList
 }
@@ -28,8 +27,7 @@ function TodoItem(props: IProps) {
     const statesList = useRecoilValue(statesListState)
     const emojiList = useRecoilValue(emojiListState)
     const [isShowDropDownAction, setIsDropdownAction] = useState(false)
-    const trans = useTrans();
-    const router = useRouter();
+    const { t, i18n } = useTranslation();
 
     const onChangeIsShowDropdownAction = () => {
         setIsDropdownAction(!isShowDropDownAction)
@@ -48,7 +46,7 @@ function TodoItem(props: IProps) {
     }
 
     const deleteTodoListItem = () => {
-        if (confirm(trans.todoList.ASK_DELETE)) {
+        if (confirm(t("todo_list.ask_delete"))) {
             const idx = todoList.findIndex(
                 (item: IItemTodoList) => item === props.todoItem
             )
@@ -123,23 +121,24 @@ function TodoItem(props: IProps) {
     }
 
     const getItemState = () => {
-        const itemState = statesList.find(item => item.id == props.todoItem.state);
-        return itemState?.state;
+        const itemState: any = statesList.find(item => item.id == props.todoItem.status);
+        if (i18n.language)
+            return itemState[i18n.language];
     }
 
     return (
         <>
         {props.todoItem.id ? 
             <div
-                className={`group flex justify-between relative p-3 pb-7 mb-4 border border-inherit md:items-center sm:items-start md:pb-3 sm:pb-7`}
+                className={`group flex justify-between relative p-3 pb-7 mb-4 pt-6 border border-inherit md:items-center sm:items-start md:pb-3 sm:pb-7`}
             >
-                <div className='absolute -top-1 -left-4 bg-green-500 border border-black py-0.5 px-1 text-white z-10 text-xs'>{getItemState()}</div>
+                <div className='absolute -top-1 -left-2 bg-green-500 border border-black py-0.5 px-1 text-white z-10 text-xs'>{getItemState()}</div>
                 <div className="flex justify-start sm:flex-row flex-col">
                     <div className="w-16 h-16 min-w-[64px] object-cover rounded-full mr-2 bg-green-400">
                         {props.todoItem.avatar != '' &&
                             <Image
                                 src={props.todoItem.avatar}
-                                alt={trans.Common.AVATAR}
+                                alt={t("common.avatar")}
                                 height="100"
                                 width="100"
                             />}
@@ -151,7 +150,7 @@ function TodoItem(props: IProps) {
                 </div>
                 <div className="flex justify-end md:ml-4 md:w-[90px] md:min-w-[90px] ml-0 w-auto min-w-fit">
                     <div className="text-xs absolute bottom-1 left-3.5 md:static">
-                        {`${trans.todoList.LAST_UPDATE}: ${convertIntToDate(
+                        {`${t("todo_list.last_update")}: ${convertIntToDate(
                             props.todoItem.updated_at
                         )}`}
                     </div>
@@ -172,19 +171,19 @@ function TodoItem(props: IProps) {
                             >
                                 <li>
                                     <Link
-                                        href={`${router.locale}${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
+                                        href={`${ROUTE_NAME.TODOLIST.UPDATE}?id=${props.todoItem.id}`}
                                     >
-                                        <a className='cursor-pointer block min-w-[65px] p-2'>{trans.Common.EDIT}</a>
+                                        <a className='cursor-pointer block min-w-[65px] p-2'>{t("common.edit")}</a>
                                     </Link>
                                 </li>
                                 <li>
-                                    <a className='cursor-pointer block min-w-[65px] p-2' onClick={deleteTodoListItem}>{trans.Common.DELETE}</a>
+                                    <a className='cursor-pointer block min-w-[65px] p-2' onClick={deleteTodoListItem}>{t("common.delete")}</a>
                                 </li>
                                 <li>
                                     <Link
-                                        href={`${router.locale}${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
+                                        href={`${ROUTE_NAME.TODOLIST.HISTORY}?id=${props.todoItem.id}`}
                                     >
-                                        <a className='cursor-pointer block min-w-[65px] p-2'>{trans.todoList.UPDATE_HISTORY}</a>
+                                        <a className='cursor-pointer block min-w-[65px] p-2'>{t("todo_list.update_history")}</a>
                                     </Link>
                                 </li>
                             </ul>

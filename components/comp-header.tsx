@@ -1,36 +1,35 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import React from 'react'
-import { useRecoilValue } from 'recoil'
-import useTrans from '../hooks/useTrans'
-import { langListState } from '../store/index-state'
+import { useTranslation } from 'react-i18next'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { currentLanguageState, langListState } from '../store/index-state'
 interface IProps {
     title: string
 }
 function Header(props: IProps) {
-    const trans = useTrans()
+    const { t, i18n } = useTranslation();
     const languageList = useRecoilValue(langListState)
-    const router = useRouter()
-    const changeLang = (lang: string) => {
-        router.push('/', `/`, { locale: lang })
+    const setCurrentLang = useSetRecoilState(currentLanguageState);
+    const changeLanguage = (id: string) => {
+        i18n.changeLanguage(id);
+        setCurrentLang(id);
     }
 
     return (
         <>
             <Head>
                 <title>{props.title}</title>
-                <meta name="description" content={trans.todoList.TITLE} />
+                <meta name="description" content={t("todo_list.title")} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="right-3.5 top-1 md:right-12 z-20 fixed">
+            <div className="right-3.5 top-1 md:right-12 z-40 fixed">
                 {languageList.length > 0 &&
-                    languageList.map((locale: string) => (
+                    languageList.map((lang: any) => (
                         <button
                             className="p-2 border hover:text-white hover:bg-black bg-white"
-                            key={locale}
-                            onClick={() => changeLang(locale)}
+                            key={lang.id}
+                            onClick={() => changeLanguage(lang.id)}
                         >
-                            {locale}
+                            {lang.name}
                         </button>
                     ))}
             </div>

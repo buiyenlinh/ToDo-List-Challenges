@@ -13,20 +13,21 @@ import {
     statesListState,
     todoListState,
 } from '../../store/todo-list-state'
-import useTrans from '../../hooks/useTrans'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useTranslation } from 'react-i18next'
 
 function CreateUpdate() {
+    const { t, i18n } = useTranslation();
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const setHistoryList = useSetRecoilState(historyListState)
     const statesList = useRecoilValue(statesListState);
     const router = useRouter();
-    const {locale} = router;
     const [index, setIndex] = useState(-1)
     const [errors, setErrors] = useState({
         title: '',
         content: '',
+        avatar: ''
     })
     const [todoItem, setTodoItem] = useState<IItemTodoList>({
         id: '',
@@ -35,24 +36,23 @@ function CreateUpdate() {
         avatar: '',
         emojiList: [],
         totalEmojiPoint: 0,
-        state: '',
+        status: '',
         created_at: 0,
         updated_at: 0,
     })
-    
-    const trans = useTrans();
 
     const handleCreateOrUpdateTodoItem = (e: FormEvent) => {
         e.preventDefault()
         let errTitle = '';
         let errContent = '';
         if (todoItem.title === '') {
-            errTitle = 'Title is required';
+            errTitle = t("todo_list.required.title");
         }
+
         if (todoItem.content === '') {
-            errContent = 'Content is required'
+            errContent = t("todo_list.required.content");
         }
-        
+
         setErrors((errors) => ({ ...errors, title: errTitle }))
         setErrors((errors) => ({ ...errors, content: errContent }))
 
@@ -62,7 +62,7 @@ function CreateUpdate() {
             } else {
                 createTodoListItem()
             }
-            router.push("/", `/${locale}` , { locale: locale})
+            router.push("/")
         }
     }
 
@@ -77,7 +77,7 @@ function CreateUpdate() {
                 avatar: todoItem.avatar,
                 emojiList: [],
                 totalEmojiPoint: 0,
-                state: statesList[0].id,
+                status: statesList[0].id,
                 created_at: new Date().getTime() / 1000,
                 updated_at: new Date().getTime() / 1000,
             },
@@ -91,8 +91,8 @@ function CreateUpdate() {
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
-                static: trans.Common.CREATE,
-                todoState: statesList[0].id,
+                status: t("common.create"),
+                todoStatus: statesList[0].id,
                 created_at: new Date().getTime() / 1000,
             },
         ])
@@ -113,8 +113,8 @@ function CreateUpdate() {
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
-                todoState: todoItem.state,
-                static: trans.Common.UPDATE,
+                todoStus: todoItem.status,
+                status: t("common.update"),
                 created_at: new Date().getTime() / 1000,
             },
         ])
@@ -129,14 +129,19 @@ function CreateUpdate() {
     }
 
     const handleChangeAvatar = (e: any) => {
-        const reader = new FileReader()
-        reader.addEventListener('load', () => {
-            setTodoItem((todoItem) => ({
-                ...todoItem,
-                avatar: reader.result as string,
-            }))
-        })
-        reader.readAsDataURL(e.target.files[0])
+        if (["image/jpeg", "image/svg+xml", "image/png"].includes(e?.target?.files[0]?.type)) {
+            setErrors(errors => ({...errors, avatar: ""}))
+            const reader = new FileReader()
+            reader.addEventListener('load', () => {
+                setTodoItem((todoItem) => ({
+                    ...todoItem,
+                    avatar: reader.result as string,
+                }))
+            })
+            reader.readAsDataURL(e.target.files[0]);
+        } else {
+            setErrors(errors => ({...errors, avatar: t("todo_list.required.avatar")}))
+        }
     }
 
     const getTodoItem = (todoId: string) => {
@@ -159,7 +164,7 @@ function CreateUpdate() {
             if (id) {
                 const val = todoList.find((item: IItemTodoList) => item.id == id);
                 if (val === undefined) {
-                    router.push("/404", "/404", {locale: locale})
+                    router.push("/404")
                 } else {
                     getTodoItem(`${id}`);
                 }
@@ -168,17 +173,24 @@ function CreateUpdate() {
         //  eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router])
 
+    const getState = (_status: any) => {
+        if (i18n.language)
+            return _status[i18n.language];
+    }
+
     return (
         <>
-            <Header title={trans.todoList.CREATE_TITLE} />
+            <Header title={t("todo_list.item")} />
             <main className={'lg:w-3/6 md:w-4/6 w-100 mx-auto mt-9 p-3'}>
                 { (todoItem.id && router.query.id) || (router.query.name == "create") ?
                     <div className="border border-inherit">
                         <div className="flex justify-between item-center bg-green-400 p-5">
-                            <h3 className="font-bold">{trans.todoList.CREATE_TITLE}</h3>
-                            <Link href="/" locale={locale}>
+                            <h3 className="font-bold">
+                                {router.query.name == "create" ? t("todo_list.create_title") : t("todo_list.update_title")}
+                            </h3>
+                            <Link href="/">
                                 <a className="font-bold flex justify-end items-center">
-                                    {trans.Common.BACK}
+                                    {t("common.back")}
                                     <svg
                                         className="h-5 w-5"
                                         viewBox="0 0 20 20"
@@ -202,7 +214,7 @@ function CreateUpdate() {
                             <form onSubmit={handleCreateOrUpdateTodoItem}>
                                 <div className="mt-3 mb-2">
                                     <label className="font-bold">
-                                        {trans.todoList.LABEL_TITLE} {' '}
+                                        {t("todo_list.label_title")} {' '}
                                         <span className="text-red-500">*</span>
                                     </label>
                                     <input
@@ -218,14 +230,14 @@ function CreateUpdate() {
                                     />
                                     {errors.title && (
                                         <div className="text-red-500 italic text-sm pt-1">
-                                            {errors.title}
+                                            {t("todo_list.required.title")}
                                         </div>
                                     )}
                                 </div>
 
                                 <div className="mt-3 mb-2">
                                     <label className="font-bold">
-                                    {trans.todoList.LABEL_CONTENT} {' '}
+                                    {t("todo_list.label_content")} {' '}
                                         <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
@@ -241,7 +253,7 @@ function CreateUpdate() {
                                     ></textarea>
                                     {errors.content && (
                                         <div className="text-red-500 italic text-sm pt-1">
-                                            {errors.content}
+                                            {t("todo_list.required.content")}
                                         </div>
                                     )}
                                 </div>
@@ -249,15 +261,20 @@ function CreateUpdate() {
                                 {
                                     router.query.id &&
                                     <div className="mt-3 mb-2">
-                                        <label className="font-bold">{trans.Common.STATIC}</label>
+                                        <label className="font-bold">{t("common.status")}</label>
                                         {statesList.length > 0 && 
                                         <select
                                             className="focus-visible:outline-0 mr-2 mt-1 border border-inherit p-1 pb-2 w-full"
-                                            onChange={(val) =>setTodoItem((todoItem) => ({...todoItem, state: val.target.value}))}
-                                            value={todoItem.state}
+                                            onChange={(val) => setTodoItem((todoItem) => (
+                                                {...todoItem, status: val.target.value}))
+                                            }
+                                            value={todoItem.status}
+                                            
                                         >
-                                            { statesList.map((_state) => (
-                                                <option value={_state.id} key={_state.id}>{_state.state}</option>
+                                            { statesList.map((_status) => (
+                                                <option value={_status.id} key={_status.id}>
+                                                    {getState(_status)}
+                                                </option>
                                             ))}
                                         </select>
                                         }
@@ -265,10 +282,10 @@ function CreateUpdate() {
                                 }
 
                                 <div className="mt-3 mb-2">
-                                    <label className="font-bold">{trans.Common.AVATAR}</label>
+                                    <label className="font-bold">{t("common.avatar")}</label>
                                     <label className="block">
                                         <span className="sr-only">
-                                            {trans.todoList.CHOOSE_IMAGE}
+                                            {t("todo_list.choose_image")}
                                         </span>
                                         <input
                                             type="file"
@@ -281,6 +298,11 @@ function CreateUpdate() {
                                             onChange={handleChangeAvatar}
                                         />
                                     </label>
+                                    { errors.avatar && (
+                                        <div className="text-red-500 italic text-sm pt-1">
+                                            {t("todo_list.required.avatar")}
+                                        </div>
+                                    )}
                                     <div className="shrink-0">
                                         {todoItem.avatar && (
                                             <Image
@@ -299,7 +321,7 @@ function CreateUpdate() {
                                             type={'submit'}
                                             className="bg-green-500 hover:bg-green-600 focus:bg-green-500 p-2 pr-5 pl-5 rounded"
                                         >
-                                            {todoItem.id == '' ? trans.Common.CREATE : trans.Common.UPDATE}
+                                            {todoItem.id == '' ? t("common.create") : t("common.update")}
                                         </button>
                                     )}
                                 </div>
@@ -331,12 +353,9 @@ export const getStaticProps = async (context: any) => {
     return res;
 }
 
-export const getStaticPaths = async ({ locale }: { locale: any}) => {
+export const getStaticPaths = async () => {
     return {
-        paths: [
-            { params: { name: 'create' }, locale },
-            { params: { name: 'update' }, locale }
-        ],
+        paths: [],
         fallback: true,
     }
 }

@@ -2,13 +2,12 @@ import Link from 'next/link'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { IDataExport, IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
-import { currentPageState, historyListState, OptionPageSizeState, pageSizeState, stateFilterState, statesListState, textFilterState, todoListFilterState, todoListState, totalPageState, } from '../../store/todo-list-state'
+import { currentPageState, historyListState, OptionPageSizeState, pageSizeState, statusFilterState, statesListState, textFilterState, todoListFilterState, todoListState, totalPageState, } from '../../store/todo-list-state'
 import TodoItem from './todo-item'
 import ROUTE_NAME from '../../router'
-import useTrans from '../../hooks/useTrans'
-import { useRouter } from 'next/router'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useTranslation } from 'react-i18next'
 function TodoList() {
     const [todoList, setTodoList] = useRecoilState(todoListState)
     const todoFilterList = useRecoilValue(todoListFilterState);
@@ -20,10 +19,8 @@ function TodoList() {
     const [pageSize, setPageSize] = useRecoilState(pageSizeState);
     const [historyList, setHistoryList] = useRecoilState(historyListState)
     const statesList = useRecoilValue(statesListState);
-    const [stateFilter, setStateFilter] = useRecoilState(stateFilterState);
-    const trans = useTrans();
-    const router = useRouter();
-    const {locale} = router;
+    const [statusFilter, setStatusFilter] = useRecoilState(statusFilterState);
+    const { t, i18n } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
 
     const onChangeTextSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +40,7 @@ function TodoList() {
     }
 
     const handleChangeFileImport = (e: any) => {
-        if (confirm(trans.todoList.ASK_IMPORT)) {
+        if (confirm(t("todo_list.ask_import"))) {
             const reader = new FileReader()
             reader.readAsText(e.target.files[0])
             reader.onload = () => {
@@ -110,18 +107,23 @@ function TodoList() {
         </ul>
     }
 
+    const getState = (state: any) => {
+        if (i18n.language)
+            return state[i18n.language];
+    }
+
     useEffect(() => {
         setIsLoading(true)
         setTimeout(() => {
             setIsLoading(false)
         }, 200)
-    }, [currentPage, stateFilter, textFilter, pageSize])
+    }, [currentPage, statusFilter, textFilter, pageSize])
 
     return (
         <div className='lg:w-4/6 md:w-5/6 w-100 mx-auto'>
-            <div className="lg:w-4/6 md:w-5/6 w-full mx-auto fixed bg-white border border-inherit p-3 top-0 z-10">
-                <Link href={`${ROUTE_NAME.TODOLIST.CREATE}`} locale={locale} className="mr-3 ml-3">
-                    <a className='font-bold'>{trans.Common.NEW}</a>
+            <div className="lg:w-4/6 md:w-5/6 w-full mx-auto fixed bg-white border border-inherit p-3 top-0 z-30">
+                <Link href={`${ROUTE_NAME.TODOLIST.CREATE}`} className="mr-3 ml-3">
+                    <a className='font-bold'>{t("common.new")}</a>
                 </Link>
                 <input
                     type="file"
@@ -133,17 +135,17 @@ function TodoList() {
                     className="mr-5 ml-5 font-bold"
                     onClick={() => inputFileImportRef?.current?.click()}
                 >
-                    {trans.Common.IMPORT}
+                    {t("common.import")}
                 </button>
                 <button className="font-bold" onClick={exportTodoFile}>
-                    {trans.Common.EXPORT}
+                    {t("common.export")}
                 </button>
             </div>
             <div className="mt-12">
                 <div className="flex justify-between items-center bg-green-400 p-2 pr-5 pl-5">
-                    <h1 className="font-bold">{trans.todoList.TODO_TITLE}</h1>
+                    <h1 className="font-bold">{t("todo_list.todo_title")}</h1>
                     <div className='flex justify-start items-center'>
-                        <div className='mr-2'>{trans.Common.PAGE_SIZE}</div>
+                        <div className='mr-2'>{t("common.page_size")}</div>
                         {optionPageSize.length > 0 && 
                         <select
                             className="focus-visible:outline-0 mr-2 border border-inherit p-1"
@@ -161,19 +163,21 @@ function TodoList() {
                                 value={textFilter}
                                 onChange={onChangeTextSearch}
                                 className="border border-inherit rounded-sm w-full outline-none py-1 px-3"
-                                placeholder={trans.todoList.SEARCH}
+                                placeholder={t("todo_list.search")}
                             />
                         </div>
                         <div className="ml-2">
                             {statesList.length > 0 && 
                                 <select
                                     className="focus-visible:outline-0 mr-2 border border-inherit p-1 pb-1.5"
-                                    onChange={val => setStateFilter(val.target.value)}
-                                    value={stateFilter}
+                                    onChange={val => setStatusFilter(val.target.value) }
+                                    value={statusFilter}
                                 >
-                                    <option value="">---</option>
+                                    <option value="">{t("common.all")}</option>
                                     { statesList.map((_state) => (
-                                        <option value={_state.id} key={_state.id}>{_state.state}</option>
+                                        <option value={_state.id} key={_state.id}>
+                                            {getState(_state)}
+                                        </option>
                                     ))}
                                 </select>
                             }
@@ -190,7 +194,7 @@ function TodoList() {
                                 </div>
                             ))
                         ) : (
-                            <div>{trans.todoList.EMPTY_LIST}</div>
+                            <div>{t("todo_list.empty_list")}</div>
                         )}
                         </>
                     : <div>

@@ -28,19 +28,23 @@ export const statesListState = atom({
     default: [
         {
             id: "1",
-            state: "create",
+            vi: "Mới",
+            en: "New"
         },
         {
             id: "2",
-            state: " pending",
+            vi: "Đang chờ xử lý",
+            en: "Pending"
         },
         {
             id: "3",
-            state: " in progress",
+            vi: "Đang xử lý",
+            en: "In progress"
         },
         {
             id: "4",
-            state: "done",
+            vi: "Hoàn thành",
+            en: "Done"
         }
     ]
 })
@@ -56,8 +60,8 @@ export const textFilterState = atom({
     default: '',
 })
 
-export const stateFilterState = atom({
-    key: "StateFilterState",
+export const statusFilterState = atom({
+    key: "StatusFilterState",
     default: ""
 })
 
@@ -129,7 +133,7 @@ export const todoListFilterState = selector({
         const todoList = get(todoListState);
         const pageSize = get(pageSizeState);
         const textFilter = get(textFilterState);
-        const stateFilter = get(stateFilterState)
+        const statusFilter = get(statusFilterState)
 
         let list:IItemTodoList[] = [...todoList];
         if (textFilter) {
@@ -138,8 +142,8 @@ export const todoListFilterState = selector({
             )
         }
 
-        if (stateFilter != '') {
-            list = list.filter((item: IItemTodoList) => stateFilter == item.state)
+        if (statusFilter != '') {
+            list = list.filter((item: IItemTodoList) => statusFilter == item.status)
         }
 
         let data: IItemTodoList[] = [];
