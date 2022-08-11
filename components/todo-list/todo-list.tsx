@@ -149,7 +149,10 @@ function TodoList() {
                         {optionPageSize.length > 0 && 
                         <select
                             className="focus-visible:outline-0 mr-2 border border-inherit p-1"
-                            onChange={val => setPageSize(parseInt(val.target.value))}
+                            onChange={val => {
+                                setPageSize(parseInt(val.target.value))
+                                setCurrentPage(1);
+                            }}
                             value={pageSize}
                         >
                             { optionPageSize.map((num, index) => (
@@ -170,7 +173,10 @@ function TodoList() {
                             {statesList.length > 0 && 
                                 <select
                                     className="focus-visible:outline-0 mr-2 border border-inherit p-1 pb-1.5"
-                                    onChange={val => setStatusFilter(val.target.value) }
+                                    onChange={val => {
+                                        setStatusFilter(val.target.value)
+                                        setCurrentPage(1);
+                                    }}
                                     value={statusFilter}
                                 >
                                     <option value="">{t("common.all")}</option>

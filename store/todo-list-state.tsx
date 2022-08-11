@@ -113,15 +113,21 @@ export const totalPageState = selector({
         const textFilter = get(textFilterState);
         const todoList = get(todoListState);
         const pageSize = get(pageSizeState);
+        const statusFilter = get(statusFilterState);
         let totalPage = 1;
+        let list:IItemTodoList[] = [...todoList];
         if (textFilter) {
-            const list:IItemTodoList[] = todoList.filter((item: IItemTodoList) =>
+            list = list.filter((item: IItemTodoList) =>
                 item.title.toLowerCase().includes(textFilter.toLowerCase())
             )
             totalPage = Math.ceil(list.length / pageSize);
-        } else {
-            totalPage = Math.ceil(todoList.length / pageSize);
         }
+        if (statusFilter != '') {
+            list = list.filter((item: IItemTodoList) => statusFilter == item.status)
+        }
+
+        totalPage = Math.ceil(list.length / pageSize);
+
         return totalPage;
     }
 })
