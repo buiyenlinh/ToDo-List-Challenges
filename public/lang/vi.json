@@ -1,0 +1,48 @@
+{
+    "common": {
+        "not_found_text": "Không thể tìm thấy trang này",
+        "import": "Nhập",
+        "export": "Xuất",
+        "new": "Mới",
+        "back": "Trở về",
+        "edit": "Sửa",
+        "delete": "Xóa",
+        "avatar": "Ảnh đại diện",
+        "create": "Tạo",
+        "update": "Cập nhật",
+        "time": "Thời gian",
+        "status": "Trạng thái",
+        "page_size": "Kích thước trang",
+        "all": "Tất cả"
+    },
+    "todo_list": {
+        "title": "Thử thách danh sách todo",
+        "search": "Tìm kiếm...",
+        "todo_title": "Danh sách todo",
+        "empty_list": "Danh sách rỗng",
+        "ask_import": "Bạn có muốn nhập tệp?",
+        "ask_delete": "Bạn có muốn xóa?",
+        "back_to_list": "Trở về danh sách todo",
+        "create_title": "Tạo mục todo",
+        "update_title": "Cập nhật mục todo",
+        "item": "Mục todo",
+        "label_title": "Tiêu đề",
+        "label_content": "Nội dung",
+        "choose_file": "Cho tệp hình ảnh",
+        "last_update": "Cập nhật lần cuối",
+        "update_success": "Cập nhật thành công",
+        "update_history": "Lịch sử",
+        "history_title": "Lịch sử mục todo",
+        "required": {
+            "title": "Tiêu đề là bắt buộc",
+            "content": "Nội dung là bắt buộc",
+            "avatar": "Ảnh đại diện phải là tệp ảnh"
+        },
+        "state": {
+            "new": "Mới",
+            "pending": "Chờ xử lý",
+            "in_progress": "Đang xử lý",
+            "done": "Hoàn thành"
+        }
+    }
+}

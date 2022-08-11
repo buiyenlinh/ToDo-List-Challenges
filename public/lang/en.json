@@ -1,0 +1,48 @@
+{
+    "common": {
+        "not_found_text": "This page could not be found",
+        "import": "Import",
+        "export": "Export",
+        "new": "New",
+        "back": "Back",
+        "edit": "Edit",
+        "delete": "Delete",
+        "avatar": "Avatar",
+        "create": "Create",
+        "update": "Update",
+        "time": "Time",
+        "status": "Status",
+        "page_size": "Page size",
+        "all": "All"
+    },
+    "todo_list": {
+        "title": "ToDo List Challenges",
+        "search": "Search...",
+        "todo_title": "Todo list",
+        "empty_list": "Empty list",
+        "ask_import": "Do you want to import?",
+        "ask_delete": "Do you want to delete?",
+        "back_to_list": "Back to TODO LIST page",
+        "create_title": "Create TODO item",
+        "update_title": "Update TODO item",
+        "item": "Todo item",
+        "label_title": "Title",
+        "label_content": "Content",
+        "choose_file": "Choose profile photo",
+        "last_update": "Last update",
+        "update_success": "Updated successful",
+        "update_history": "History",
+        "history_title": "History of todo item",
+        "required": {
+            "title": "Title is required",
+            "content": "Content is required",
+            "avatar": "Avatar must be image"
+        },
+        "state": {
+            "new": "New",
+            "pending": "Pending",
+            "in_progress": "In progress",
+            "done": "Done"
+        }
+    }
+}
