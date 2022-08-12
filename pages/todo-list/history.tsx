@@ -1,32 +1,24 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import { useSetRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import { Header } from '../../components'
 import { convertIntToDate } from '../../contants/funcs'
-import { historyOfTodoState, statesListState, todoIdState, todoListState } from '../../store/todo-list-state'
+import { historyOfTodoIdState, statesListState } from '../../store/todo-list-state'
 import Image from 'next/image'
-import { IHistoryUpdateTodoListItem, IItemTodoList } from '../../contants/interface'
+import { IHistoryUpdateTodoListItem } from '../../contants/interface'
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useTranslation } from 'react-i18next'
 function History() {
     const router = useRouter()
-    const setTodoId = useSetRecoilState(todoIdState)
-    const todoList = useRecoilValue(todoListState);
-    const historyList = useRecoilValue(historyOfTodoState)
+    const historyList = useRecoilValue(historyOfTodoIdState(router.query.id));
     const statesList = useRecoilValue(statesListState)
     const { t, i18n } = useTranslation();
     useEffect(() => {
-        const id = router.query.id
-        if (id != undefined) {
-            const val = todoList.find((item: IItemTodoList) => item.id == id);
-            if (val === undefined) {
-                router.push("/404")
-            } else {
-                setTodoId(`${id}`)
-            }
-        }
+        if (historyList.length === 0 && router.query.id) [
+            router.push("/404")
+        ]
         //  eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.query.id])
 
@@ -40,7 +32,7 @@ function History() {
         <>
             <Header title={t("todo_list.history_title")} />
             <main className="lg:w-4/6 md:w-5/6 w-100 mx-auto p-3">
-                { historyList?.list?.length > 0 && router.query.id != undefined ?
+                { historyList.length > 0 && router.query.id ?
                 <>
                     <div className="flex justify-between item-center bg-green-400 p-2 pr-5 pl-5 mt-10">
                         <h1 className="font-bold">{t("todo_list.update_history")}</h1>
@@ -79,8 +71,8 @@ function History() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {historyList?.list?.length > 0 ? (
-                                    historyList.list?.map((item: IHistoryUpdateTodoListItem) => {
+                                {historyList.length > 0 ? (
+                                    historyList?.map((item: IHistoryUpdateTodoListItem) => {
                                         return (
                                             <tr key={item.id}>
                                                 <td className="text-center border border-inherit p-2">

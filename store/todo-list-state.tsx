@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil'
+import { atom, selector, selectorFamily } from 'recoil'
 import { recoilPersist } from 'recoil-persist'
 import {
     IHistoryUpdateTodoListItem,
@@ -75,23 +75,6 @@ export const emojiListState = atom({
     default: initialEmoji,
 })
 
-export const historyOfTodoState = selector({
-    key: 'HistoryOfTodoState',
-    get: ({ get }) => {
-        const historyList = get(historyListState)
-        const todoList = get(todoListState)
-        const id = get(todoIdState);
-        const list: IHistoryUpdateTodoListItem[] = historyList.filter(
-            (item: IHistoryUpdateTodoListItem) => item.todoId == id
-        );
-        const todo = todoList.find((item: IItemTodoList) => item.id == id);
-        return {
-            list: list,
-            todo: todo,
-        }
-    },
-})
-
 export const currentPageState = atom({
     key: "CurrentPageState",
     default: 1
@@ -163,5 +146,30 @@ export const todoListFilterState = selector({
             } 
         }
         return data.reverse();
+    }
+})
+
+export const historyOfTodoIdState = selectorFamily({
+    key: "HistoryOfTodoIdState",
+    get: (todoId) => ({get}) => {
+        const historyList = get(historyListState);
+        const list: IHistoryUpdateTodoListItem[] = historyList.filter(
+            (item: IHistoryUpdateTodoListItem) => item.todoId == todoId
+        );
+        
+        return list
+    }
+})
+
+export const todoItemState = selectorFamily({
+    key: "TodoItemState",
+    get: (query: any) => ({get}) => {
+        const todoList = get(todoListState);
+        if (query?.id === undefined) {
+            return undefined;
+        }
+
+        const todoItem = todoList.find((item: IItemTodoList) => item.id == query.id);
+        return todoItem;
     }
 })

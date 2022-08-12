@@ -11,6 +11,7 @@ import {
 import {
     historyListState,
     statesListState,
+    todoItemState,
     todoListState,
 } from '../../store/todo-list-state'
 import Skeleton from 'react-loading-skeleton'
@@ -20,9 +21,10 @@ import { useTranslation } from 'react-i18next'
 function CreateUpdate() {
     const { t, i18n } = useTranslation();
     const [todoList, setTodoList] = useRecoilState(todoListState)
-    const setHistoryList = useSetRecoilState(historyListState)
+    const setHistoryList = useSetRecoilState(historyListState) 
     const statesList = useRecoilValue(statesListState);
     const router = useRouter();
+    const itemState = useRecoilValue(todoItemState(router.query))
     const [index, setIndex] = useState(-1)
     const [errors, setErrors] = useState({
         title: '',
@@ -144,30 +146,14 @@ function CreateUpdate() {
         }
     }
 
-    const getTodoItem = (todoId: string) => {
-        if (todoList.length > 0) {
-            todoList.forEach((_item: IItemTodoList) => {
-                if (_item?.id == todoId) {
-                    setTodoItem(_item)
-                    const idx = todoList.findIndex(
-                        (item: IItemTodoList) => item === _item
-                    )
-                    setIndex(idx)
-                }
-            })
-        }
-    }
-
     useEffect(() => {
         if (router.query.name == 'update') {
-            const id = router.query.id;
-            if (id) {
-                const val = todoList.find((item: IItemTodoList) => item.id == id);
-                if (val === undefined) {
-                    router.push("/404")
-                } else {
-                    getTodoItem(`${id}`);
-                }
+            if (itemState === undefined) {
+                router.push("/404");
+            } else {
+                setTodoItem(itemState);
+                const idx = todoList.findIndex((item: IItemTodoList) => item === itemState);
+                setIndex(idx)
             }
         }
         //  eslint-disable-next-line react-hooks/exhaustive-deps
