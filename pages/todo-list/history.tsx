@@ -23,9 +23,11 @@ function History() {
     }, [router.query.id])
 
     const getItemState = (todoState: string) => {
-        const itemState:any = statesList.find(item => item.id == todoState);
-        if (i18n.language)
-            return itemState[i18n.language];
+        if (todoState) {
+            const itemState:any = statesList.find(item => item.id == todoState);
+            if (i18n.language)
+                return itemState[i18n.language];
+        }
     }
 
     return (

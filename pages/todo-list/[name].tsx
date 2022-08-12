@@ -115,7 +115,7 @@ function CreateUpdate() {
                 title: todoItem.title,
                 content: todoItem.content,
                 avatar: todoItem.avatar,
-                todoStus: todoItem.status,
+                todoStatus: todoItem.status,
                 status: t("common.update"),
                 created_at: new Date().getTime() / 1000,
             },
